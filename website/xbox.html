@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE on Xbox — GoStudios</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}.wrap{max-width:920px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1}
+    .card{background:var(--bg2);border:1px solid var(--green4);border-radius:16px;padding:32px;margin-bottom:24px}
+    h1{color:var(--green);font-size:2rem;margin-bottom:8px} h2{color:var(--green);margin-bottom:12px;font-size:1.2rem}
+    p,li{color:var(--txt2);line-height:1.7} ul,ol{margin-left:18px} li{margin:6px 0} code{color:var(--green);background:var(--bg);padding:2px 6px;border-radius:4px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px} .muted{color:var(--txt3);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html#download" class="btn-outline btn-small">Back</a></div>
+  </nav>
+  <main class="wrap">
+    <div class="card">
+      <h1>PLAYTREE on Xbox</h1>
+      <p>Xbox controller support is already built into PLAYTREE. Console publishing requires Microsoft Partner Center packaging/certification.</p>
+      <div class="actions">
+        <a class="btn-primary" href="downloads/PLAYTREE.exe" download>Download Windows Build</a>
+        <a class="btn-outline" href="index.html#download">All Downloads</a>
+      </div>
+      <p class="muted" style="margin-top:14px">Status: Xbox controller supported now. Microsoft Store/Xbox console listing requires MSIX packaging and Partner Center submission.</p>
+    </div>
+    <div class="card">
+      <h2>How to get it on Xbox / Microsoft Store</h2>
+      <ol>
+        <li>Build the Windows EXE with <code>playtree/build_playtree.bat</code>.</li>
+        <li>Package as MSIX using Microsoft MSIX Packaging Tool (<code>playtree/build_xbox_msix.bat</code> helps prep).</li>
+        <li>Create/reserve PLAYTREE in Microsoft Partner Center.</li>
+        <li>Upload MSIX, complete age rating, store listing, and Xbox device family/certification requirements.</li>
+        <li>Test on Xbox Dev Mode before submission.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>Already included</h2>
+      <ul>
+        <li>Xbox controller button mapping and on-screen prompts</li>
+        <li>Gamepad input support in gameplay/menus</li>
+        <li>Windows build pipeline for MSIX packaging</li>
+      </ul>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE — Awaken. Rebuild. Restore Balance.</title>
+  <meta name="description" content="PLAYTREE is a stylized multiplayer fantasy adventure game. Explore 4 campaign rounds, 5 classes, boss fights, base building, and creature taming.">
+  <meta name="author" content="GoStudios">
+  <meta name="theme-color" content="#08130d">
+  <meta property="og:title" content="PLAYTREE — Awaken. Rebuild. Restore Balance.">
+  <meta property="og:description" content="A stylized multiplayer fantasy adventure game featuring combat, exploration, base building, and creature taming.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://playtree.game">
+  <meta property="og:image" content="https://playtree.game/icon192.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://playtree.game">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="../assets/icon32.png">
+  <link rel="apple-touch-icon" href="icon192.png">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "PLAYTREE",
+    "description": "Awaken. Rebuild. Restore Balance. A stylized multiplayer fantasy adventure game.",
+    "url": "https://playtree.game",
+    "image": "https://playtree.game/icon192.png",
+    "genre": ["Action", "Adventure", "RPG", "Fantasy", "Multiplayer"],
+    "gamePlatform": ["Windows", "Xbox"],
+    "applicationCategory": "Game",
+    "operatingSystem": "Windows 10/11",
+    "author": {"@type":"Organization","name":"GoStudios","url":"https://gostudios.com"},
+    "publisher": {"@type":"Organization","name":"GoConsole Game Studios"},
+    "offers": {"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}
+  }
+  </script>
+</head>
+<body>
+  <!--
+  THESIS: PLAYTREE is presented as a field chapter: a living forest dossier, not a category-standard hero.
+  OWN-WORLD: Near-black green surfaces, vivid PlayTree green, gold ritual marks, black pixel notation, and a large green orb motif.
+  STORY: A player sees the restoration mission, enters the four-round campaign, and downloads or opens the existing platform options.
+  FIRST VIEWPORT: Left: the PLAYTREE title and restoration hook. Right: a framed chapter dossier with the in-world banner, chapter status, and campaign trail.
+  FORM: Campaign dossier / chapter artifact, candidate 3 of the grounded surface structures, seed 1b50ac3a.
+  -->
+  <div id="particles-bg" aria-hidden="true"></div>
+
+  <nav id="navbar" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="PLAYTREE home">
+      <img src="../assets/icon32.png" alt="" width="32" height="32">
+      <span>PLAYTREE</span>
+    </a>
+    <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span>
+    </button>
+    <div class="nav-links" id="nav-links">
+      <a href="#journey">Journey</a>
+      <a href="#systems">Systems</a>
+      <a href="#download">Download</a>
+      <button id="auth-btn" class="account-button" type="button">Sign In</button>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="chapter-mark">Chapter 0 / Season 0</p>
+        <h1 id="hero-title">Awaken.<br><strong>Rebuild.</strong><br>Restore balance.</h1>
+        <p class="hero-summary">Enter a growing fantasy world of corrupted forests, crystal depths, and skyward ruins. Build your class. Gather allies. Finish the chapter.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#download">Enter the world</a>
+          <button class="button button-quiet" id="trailer-btn" type="button">Watch trailer</button>
+        </div>
+      </div>
+
+      <div class="chapter-dossier" aria-label="Chapter 0 campaign preview">
+        <div class="dossier-top">
+          <span>The first chapter</span>
+          <span class="status"><i></i> Balance disrupted</span>
+        </div>
+        <div class="dossier-art">
+          <img src="../assets/banner.png" alt="Aerial view of the green PlayTree world">
+          <div class="world-mark" aria-hidden="true">
+            <img src="../assets/icon128.png" alt="">
+          </div>
+        </div>
+        <div class="campaign-trail" aria-label="Campaign rounds">
+          <a href="#round-1" class="trail-node active"><b>I</b><span>Forest</span></a>
+          <a href="#round-2" class="trail-node"><b>II</b><span>Caves</span></a>
+          <a href="#round-3" class="trail-node"><b>III</b><span>Storms</span></a>
+          <a href="#round-4" class="trail-node"><b>IV</b><span>Throne</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof-strip" aria-label="Game highlights">
+      <div><strong>5</strong><span>Play styles</span></div>
+      <div><strong>4</strong><span>Campaign rounds</span></div>
+      <div><strong>18+</strong><span>Enemy types</span></div>
+      <div><strong>Local</strong><span>Co-op worlds</span></div>
+    </section>
+
+    <section class="journey" id="journey" aria-labelledby="journey-title">
+      <div class="section-heading">
+        <p class="section-index">The campaign</p>
+        <h2 id="journey-title">Four paths lead back to balance.</h2>
+      </div>
+      <div class="round-list">
+        <article class="round" id="round-1">
+          <div class="round-figure forest"><span>Root Titan</span></div>
+          <div class="round-copy">
+            <p>Round I</p>
+            <h3>The Forest Awakening</h3>
+            <p>The corruption reaches the ancient forest. Defeat the Root Titan and restore the first spark of life.</p>
+          </div>
+        </article>
+        <article class="round" id="round-2">
+          <div class="round-figure caves"><span>Crystal Hydra</span></div>
+          <div class="round-copy">
+            <p>Round II</p>
+            <h3>Crystal Depths</h3>
+            <p>Descend through crystal caverns while the threat beneath the earth begins to move.</p>
+          </div>
+        </article>
+        <article class="round" id="round-3">
+          <div class="round-figure storms"><span>Sky Guardian</span></div>
+          <div class="round-copy">
+            <p>Round III</p>
+            <h3>Storm Peaks</h3>
+            <p>Climb beyond the clouds, where the last source of pure light waits behind the storm.</p>
+          </div>
+        </article>
+        <article class="round" id="round-4">
+          <div class="round-figure throne"><span>Hollow King</span></div>
+          <div class="round-copy">
+            <p>Round IV</p>
+            <h3>The Hollow Throne</h3>
+            <p>Face the force commanding the corruption itself and decide the shape of the restored world.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="systems" id="systems" aria-labelledby="systems-title">
+      <div class="section-heading compact">
+        <p class="section-index">Ways to grow</p>
+        <h2 id="systems-title">Build the adventurer you need.</h2>
+      </div>
+      <div class="systems-list">
+        <article>
+          <span>01</span>
+          <h3>Choose a class</h3>
+          <p>Guardian, Ranger, Mage, Mechanic, or Beast Tamer.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Shape your build</h3>
+          <p>Use branching skills, equipment, rarity tiers, and enchantments.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Make a companion</h3>
+          <p>Tame creatures, evolve pets, and add mounts to every expedition.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Leave a base behind</h3>
+          <p>Construct defenses and crafting stations in your own growing camp.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="download" id="download" aria-labelledby="download-title">
+      <div class="download-heading">
+        <p class="section-index">Begin Chapter 0</p>
+        <h2 id="download-title">Choose your platform.</h2>
+      </div>
+      <div class="download-options">
+        <a class="platform primary-platform" href="downloads/" aria-label="Open Windows downloads">
+          <div>
+            <p>Windows</p>
+            <strong>Download for PC</strong>
+          </div>
+          <span aria-hidden="true">↓</span>
+        </a>
+        <a class="platform" href="playstore.html">
+          <div>
+            <p>Android</p>
+            <strong>Play Store listing</strong>
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a class="platform" href="xbox.html">
+          <div>
+            <p>Xbox</p>
+            <strong>Platform status</strong>
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <p class="download-note">Windows 10+ · Android builds may require sideloading · Xbox availability is listed on its platform page</p>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#top">
+      <img src="../assets/icon32.png" alt="" width="32" height="32">
+      <span>PLAYTREE</span>
+    </a>
+    <p>GoConsole Game Studios / GoStudios · 2026</p>
+    <div>
+      <a href="privacy.html">Privacy</a>
+      <a href="https://playtree.game">playtree.game</a>
+    </div>
+  </footer>
+
+  <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="modal-overlay"></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close">&times;</button>
+      <section id="auth-login" class="auth-panel">
+        <h2 id="auth-title">GoStudios Account</h2>
+        <p>Sign in to keep your player profile.</p>
+        <form id="login-form">
+          <label>Email<input type="email" id="login-email" placeholder="you@gostudios.com" required></label>
+          <label>Password<input type="password" id="login-password" required></label>
+          <button class="button button-primary" type="submit">Sign In</button>
+        </form>
+        <p>New player? <a href="#" id="show-register">Create an account</a></p>
+      </section>
+      <section id="auth-register" class="auth-panel hidden">
+        <h2>Create an account</h2>
+        <form id="register-form">
+          <label>Display Name<input type="text" id="reg-name" required></label>
+          <label>Email<input type="email" id="reg-email" required></label>
+          <label>Password<input type="password" id="reg-password" minlength="6" required></label>
+          <label>Confirm Password<input type="password" id="reg-confirm" required></label>
+          <button class="button button-primary" type="submit">Create Account</button>
+        </form>
+        <p>Already registered? <a href="#" id="show-login">Sign in</a></p>
+      </section>
+      <section id="auth-profile" class="auth-panel hidden">
+        <h2>Player profile</h2>
+        <div class="profile-card">
+          <div class="profile-avatar" id="profile-avatar">P</div>
+          <h3 id="profile-name">Player</h3>
+          <p id="profile-email">player@gostudios.com</p>
+        </div>
+        <div class="profile-stats">
+          <p><strong id="profile-hours">0</strong><span>Hours</span></p>
+          <p><strong id="profile-rounds">0</strong><span>Rounds</span></p>
+          <p><strong id="profile-bosses">0</strong><span>Bosses</span></p>
+        </div>
+        <button id="logout-btn" class="button button-quiet" type="button">Sign Out</button>
+      </section>
+      <p id="auth-message" class="auth-message hidden"></p>
+    </div>
+  </div>
+
+  <div id="trailer-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="PLAYTREE trailer">
+    <div class="modal-overlay"></div>
+    <div class="modal-panel trailer-panel">
+      <button class="modal-close" type="button" aria-label="Close">&times;</button>
+      <iframe id="trailer-iframe" src="trailer.html" title="PLAYTREE trailer"></iframe>
+    </div>
+  </div>
+
+  <div id="install-banner" class="install-banner hidden">
+    <span>Install PLAYTREE as an app</span>
+    <button id="install-btn" class="button button-primary" type="button">Install</button>
+    <button id="install-dismiss" class="button button-quiet" type="button">Dismiss</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+  </script>
+</body>
+</html>

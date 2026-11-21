@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE on Play Store — GoStudios</title>
+  <meta name="description" content="PLAYTREE Play Store listing — free fantasy adventure RPG by GoConsole Game Studios / GoStudios.">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}
+    .store-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1}
+    .store-card{background:var(--bg2);border:1px solid var(--green4);border-radius:16px;padding:32px;margin-bottom:24px}
+    .store-head{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+    .store-icon{width:96px;height:96px;border-radius:20px;background:linear-gradient(135deg,#102015,#30c050);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#d0f0d0;box-shadow:0 0 30px rgba(80,255,120,.2)}
+    .store-title h1{color:var(--green);font-size:2rem;letter-spacing:2px}
+    .store-title p{color:var(--txt2)}
+    .store-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .badge{background:var(--bg3);border:1px solid var(--bg4);color:var(--txt2);padding:6px 12px;border-radius:999px;font-size:.8rem}
+    .store-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+    .store-actions a{min-width:180px}
+    h2{color:var(--green);margin-bottom:12px;font-size:1.2rem}
+    ul{margin-left:18px;color:var(--txt2)}
+    li{margin:6px 0}
+    .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+    .shot{background:linear-gradient(180deg,#141c14,#0d140d);border:1px solid var(--bg4);border-radius:12px;min-height:120px;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:.85rem;text-align:center;padding:12px}
+    .muted{color:var(--txt3);font-size:.9rem}
+    a{color:var(--green)}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html#download" class="btn-outline btn-small">Back</a></div>
+  </nav>
+  <main class="store-wrap">
+    <div class="store-card">
+      <div class="store-head">
+        <div class="store-icon">PT</div>
+        <div class="store-title">
+          <h1>PLAYTREE</h1>
+          <p>GoConsole Game Studios &bull; GoStudios</p>
+          <div class="store-badges">
+            <span class="badge">Free</span>
+            <span class="badge">Fantasy RPG</span>
+            <span class="badge">Multiplayer</span>
+            <span class="badge">Android 8+</span>
+            <span class="badge">v1.0.0</span>
+          </div>
+        </div>
+      </div>
+      <div class="store-actions">
+        <a class="btn-gold" href="https://play.google.com/store/apps/details?id=org.gostudios.playtree" target="_blank" rel="noopener">Open in Google Play</a>
+        <a class="btn-primary" href="downloads/PLAYTREE.apk" download>Download APK</a>
+        <a class="btn-outline" href="index.html#download">All Downloads</a>
+      </div>
+      <p class="muted" style="margin-top:14px">Google Play listing URL will be active once published. Until then, use the direct APK download.</p>
+    </div>
+
+    <div class="store-card">
+      <h2>About this game</h2>
+      <p class="muted">Awaken. Rebuild. Restore Balance. PLAYTREE is a stylized multiplayer fantasy adventure RPG with epic boss fights, 5 classes, base building, creature taming, and deep crafting.</p>
+      <ul>
+        <li>5 unique classes — Guardian, Ranger, Mage, Mechanic, Beast Tamer</li>
+        <li>4 campaign rounds with epic bosses</li>
+        <li>Base building, crafting, taming, and progression</li>
+        <li>Multiplayer support and controller/touch controls</li>
+        <li>Free to play</li>
+      </ul>
+    </div>
+
+    <div class="store-card">
+      <h2>Screenshots</h2>
+      <div class="shots">
+        <div class="shot">Gameplay Screenshot</div>
+        <div class="shot">Boss Fight</div>
+        <div class="shot">Base Building</div>
+        <div class="shot">Character Classes</div>
+      </div>
+      <p class="muted" style="margin-top:12px">Replace placeholders with real screenshots before publishing.</p>
+    </div>
+
+    <div class="store-card">
+      <h2>Developer</h2>
+      <p class="muted">GoConsole Game Studios / GoStudios<br>Contact: support@gostudios.com<br>&copy; 2026 GoStudios. All rights reserved.</p>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
