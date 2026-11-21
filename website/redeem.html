@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE Redeem Gift Card</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}
+    .wrap{max-width:720px;margin:0 auto;padding:40px 20px;position:relative;z-index:1}
+    .card{background:var(--bg2);border:1px solid var(--green4);border-radius:20px;padding:40px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+    .gift{width:100%;max-width:360px;height:180px;margin:24px auto;border-radius:16px;background:linear-gradient(135deg,#0a1a0a 0%,#1a3a1a 40%,#0d200d 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(80,255,120,.15),inset 0 0 60px rgba(0,0,0,.3)}
+    .gift::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(80,255,120,.03) 10px,rgba(80,255,120,.03) 20px)}
+    .gift::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(80,255,120,.08) 0%,transparent 60%);animation:shimmer 4s ease-in-out infinite}
+    @keyframes shimmer{0%,100%{transform:translate(-20%,-20%)}50%{transform:translate(20%,20%)}}
+    .gift-chip{position:absolute;top:16px;left:16px;width:48px;height:36px;border-radius:6px;background:linear-gradient(135deg,#c8a800,#ffd700);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+    .gift-logo{position:relative;z-index:1;font-size:1.8rem;font-weight:900;color:var(--green);text-shadow:0 0 20px rgba(80,255,120,.5);letter-spacing:4px}
+    .gift-sub{position:absolute;bottom:16px;right:16px;color:var(--txt3);font-size:.7rem;letter-spacing:2px}
+    h1{color:var(--green);text-align:center;margin-bottom:8px;font-size:1.8rem}
+    .subtitle{color:var(--txt2);text-align:center;margin-bottom:24px;font-size:.9rem}
+    .input-wrap{position:relative;margin:16px 0}
+    input{width:100%;padding:14px 16px;background:var(--bg);border:2px solid var(--bg4);border-radius:10px;color:var(--txt);font-size:1.1rem;font-family:var(--mono);letter-spacing:2px;text-align:center;transition:border-color .2s}
+    input:focus{outline:none;border-color:var(--green3)}
+    .btn-row{display:flex;gap:12px;margin-top:16px}
+    .btn-redeem{flex:1;padding:14px;background:linear-gradient(135deg,var(--green2),var(--green3));color:var(--bg);border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:1rem;letter-spacing:1px;transition:all .3s}
+    .btn-redeem:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(80,255,120,.3)}
+    .btn-cancel{padding:14px 24px;background:transparent;color:var(--txt3);border:1px solid var(--bg4);border-radius:10px;cursor:pointer;font-weight:600;transition:all .2s}
+    .btn-cancel:hover{border-color:var(--red);color:var(--red)}
+    #result{text-align:center;margin-top:16px;padding:12px;border-radius:8px;font-weight:600;transition:all .3s}
+    #result.hidden{display:none}
+    #result.success{background:rgba(80,255,120,.1);color:var(--green);border:1px solid rgba(80,255,120,.3)}
+    #result.error{background:rgba(255,64,96,.1);color:var(--red);border:1px solid rgba(255,64,96,.3)}
+    .history{margin-top:24px;border-top:1px solid var(--bg4);padding-top:20px}
+    .history h3{color:var(--green);margin-bottom:12px;font-size:1.1rem}
+    .history-item{display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:6px;margin-bottom:6px;font-size:.85rem}
+    .history-item .code{color:var(--txt2);font-family:var(--mono)}
+    .history-item .reward{color:var(--gold)}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a></div>
+  </nav>
+  <main class="wrap">
+    <div class="card">
+      <h1>Redeem Gift Card</h1>
+      <p class="subtitle">Enter your 16-digit code to unlock rewards</p>
+      <div class="gift">
+        <div class="gift-chip"></div>
+        <span class="gift-logo">PLAYTREE</span>
+        <span class="gift-sub">GIFT CARD</span>
+      </div>
+      <div class="input-wrap">
+        <input type="text" id="giftCode" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off">
+      </div>
+      <div class="btn-row">
+        <button class="btn-redeem" onclick="redeemGift()">Redeem Card</button>
+        <button class="btn-cancel" onclick="document.getElementById('giftCode').value=''">Clear</button>
+      </div>
+      <div id="result" class="hidden"></div>
+      <div class="history">
+        <h3>Redemption History</h3>
+        <div id="historyList"><p style="color:var(--txt3);font-size:.85rem">No cards redeemed yet.</p></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const history = [];
+    function redeemGift() {
+      const input = document.getElementById('giftCode');
+      const result = document.getElementById('result');
+      const code = input.value.replace(/\s/g,'').toUpperCase();
+      if (code.length < 16) {
+        result.className = 'error'; result.textContent = 'Please enter a valid 16-digit code.'; result.classList.remove('hidden'); return;
+      }
+      const formatted = code.match(/.{1,4}/g).join('-');
+      const reward = ['500 Gold', 'Premium Skin', 'XP Boost (2x)', 'Exclusive Mount'][Math.floor(Math.random()*4)];
+      history.unshift({ code: formatted, reward });
+      result.className = 'success'; result.textContent = `Redeemed! Reward: ${reward}`; result.classList.remove('hidden');
+      input.value = '';
+      renderHistory();
+    }
+    function renderHistory() {
+      const list = document.getElementById('historyList');
+      if (!history.length) { list.innerHTML = '<p style="color:var(--txt3);font-size:.85rem">No cards redeemed yet.</p>'; return; }
+      list.innerHTML = history.map(h => `<div class="history-item"><span class="code">${h.code}</span><span class="reward">${h.reward}</span></div>`).join('');
+    }
+    document.getElementById('giftCode').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();
+      if (v.length > 16) v = v.slice(0,16);
+      e.target.value = v.match(/.{1,4}/g)?.join('-') || v;
+    });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE Profile</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}
+    .wrap{max-width:900px;margin:0 auto;padding:40px 20px;position:relative;z-index:1}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--bg2);border:1px solid var(--green4);border-radius:16px;padding:24px;margin-bottom:20px}
+    .profile-head{display:flex;align-items:center;gap:20px;margin-bottom:20px}
+    .avatar{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green3));display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:900;color:var(--bg);box-shadow:0 0 24px rgba(80,255,120,.3);flex-shrink:0}
+    .profile-info h1{color:var(--green);margin-bottom:4px;font-size:1.6rem}
+    .profile-info p{color:var(--txt2);font-size:.9rem}
+    .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;margin-left:8px}
+    .badge.online{background:rgba(80,255,120,.15);color:var(--green);border:1px solid rgba(80,255,120,.3)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .stat{text-align:center;background:var(--bg);border-radius:10px;padding:14px 8px}
+    .stat-val{display:block;font-size:1.6rem;font-weight:900;color:var(--green)}
+    .stat-label{font-size:.7rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1px}
+    h2{color:var(--green);margin-bottom:14px;font-size:1.2rem;display:flex;align-items:center;gap:8px}
+    .friend-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg);border-radius:10px;margin-bottom:8px;transition:background .2s}
+    .friend-item:hover{background:var(--bg3)}
+    .friend-avatar{width:40px;height:40px;border-radius:50%;background:var(--green3);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--bg);flex-shrink:0}
+    .friend-name{flex:1;color:var(--txt);font-weight:600}
+    .friend-status{font-size:.75rem;padding:2px 8px;border-radius:999px}
+    .friend-status.online{background:rgba(80,255,120,.15);color:var(--green)}
+    .friend-status.offline{background:rgba(112,144,112,.15);color:var(--txt3)}
+    .friend-remove{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:1.1rem;padding:4px 8px;border-radius:6px;transition:all .2s}
+    .friend-remove:hover{color:var(--red);background:rgba(255,64,96,.1)}
+    .vc-panel{background:var(--bg);border-radius:12px;padding:16px}
+    .vc-controls{display:flex;gap:10px;margin-bottom:14px}
+    .vc-btn{flex:1;padding:10px;background:var(--bg2);border:1px solid var(--bg4);border-radius:8px;color:var(--txt);cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+    .vc-btn:hover{border-color:var(--green3)}
+    .vc-btn.active{background:var(--green3);color:var(--bg);border-color:var(--green2)}
+    .vc-btn.muted{background:var(--red2);color:#fff;border-color:var(--red)}
+    .vc-participant{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:6px;background:var(--bg2)}
+    .vc-avatar{width:32px;height:32px;border-radius:50%;background:var(--green4);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--green)}
+    .vc-name{flex:1;color:var(--txt);font-size:.85rem}
+    .vc-indicator{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(80,255,120,.5)}
+    .vc-indicator.muted{background:var(--red)}
+    .vc-volume{margin-top:12px}
+    .vc-volume label{color:var(--txt3);font-size:.8rem;display:block;margin-bottom:4px}
+    .vc-volume input{width:100%;accent-color:var(--green)}
+    .vc-status{text-align:center;padding:8px;border-radius:6px;margin-top:10px;font-size:.85rem}
+    .vc-status.connected{background:rgba(80,255,120,.1);color:var(--green)}
+    .vc-status.disconnected{background:rgba(255,64,96,.1);color:var(--red)}
+    .empty-state{text-align:center;padding:20px;color:var(--txt3);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a></div>
+  </nav>
+  <main class="wrap">
+    <div class="card">
+      <div class="profile-head">
+        <div class="avatar">P</div>
+        <div class="profile-info">
+          <h1>PlayerName <span class="badge online">Online</span></h1>
+          <p>GoStudios Account &bull; Member since 2026</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat-val">42</span><span class="stat-label">Hours</span></div>
+        <div class="stat"><span class="stat-val">3</span><span class="stat-label">Rounds</span></div>
+        <div class="stat"><span class="stat-val">7</span><span class="stat-label">Bosses</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>👥 Friends (3)</h2>
+        <div class="friend-item">
+          <div class="friend-avatar">A</div>
+          <span class="friend-name">AlexTheGreat</span>
+          <span class="friend-status online">Online</span>
+          <button class="friend-remove" title="Remove">✕</button>
+        </div>
+        <div class="friend-item">
+          <div class="friend-avatar">M</div>
+          <span class="friend-name">MageMaster</span>
+          <span class="friend-status online">Online</span>
+          <button class="friend-remove" title="Remove">✕</button>
+        </div>
+        <div class="friend-item">
+          <div class="friend-avatar">S</div>
+          <span class="friend-name">ShadowSlayer</span>
+          <span class="friend-status offline">Offline</span>
+          <button class="friend-remove" title="Remove">✕</button>
+        </div>
+        <button class="btn-primary btn-full" style="margin-top:12px;padding:10px" onclick="alert('Add friend dialog (demo)')">+ Add Friend</button>
+      </div>
+
+      <div class="card">
+        <h2>🎤 Voice Chat</h2>
+        <div class="vc-panel">
+          <div class="vc-controls">
+            <button class="vc-btn active" id="micBtn" onclick="toggleMic()">🎤 Mic On</button>
+            <button class="vc-btn" id="deafBtn" onclick="toggleDeaf()">🔊 Speaker On</button>
+          </div>
+          <div class="vc-participant">
+            <div class="vc-avatar">P</div>
+            <span class="vc-name">You (PlayerName)</span>
+            <div class="vc-indicator" id="youIndicator"></div>
+          </div>
+          <div class="vc-participant">
+            <div class="vc-avatar">A</div>
+            <span class="vc-name">AlexTheGreat</span>
+            <div class="vc-indicator"></div>
+          </div>
+          <div class="vc-participant">
+            <div class="vc-avatar">M</div>
+            <span class="vc-name">MageMaster</span>
+            <div class="vc-indicator muted"></div>
+          </div>
+          <div class="vc-volume">
+            <label>Volume</label>
+            <input type="range" min="0" max="100" value="80">
+          </div>
+          <div class="vc-status connected" id="vcStatus">● Connected to voice channel</div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    let micOn = true, deafOn = false;
+    function toggleMic() {
+      micOn = !micOn;
+      const btn = document.getElementById('micBtn');
+      btn.textContent = micOn ? '🎤 Mic On' : '🎤 Mic Muted';
+      btn.className = 'vc-btn' + (micOn ? ' active' : ' muted');
+      document.getElementById('youIndicator').className = 'vc-indicator' + (micOn ? '' : ' muted');
+    }
+    function toggleDeaf() {
+      deafOn = !deafOn;
+      const btn = document.getElementById('deafBtn');
+      btn.textContent = deafOn ? '🔇 Speaker Off' : '🔊 Speaker On';
+      btn.className = 'vc-btn' + (deafOn ? ' muted' : '');
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
