@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE Servers</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}
+    .wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1}
+    .card{background:var(--bg2);border:1px solid var(--green4);border-radius:16px;padding:32px;margin-bottom:24px}
+    h1{color:var(--green);font-size:2rem;margin-bottom:8px}
+    h2{color:var(--green);margin-bottom:12px;font-size:1.2rem}
+    p{color:var(--txt2);line-height:1.7}
+    .server-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+    .server-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg);border:1px solid var(--bg4);border-radius:10px;transition:all .2s}
+    .server-item:hover{border-color:var(--green3)}
+    .server-status{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    .server-status.online{background:var(--green);box-shadow:0 0 8px rgba(80,255,120,.5)}
+    .server-status.offline{background:var(--red)}
+    .server-info{flex:1}
+    .server-name{color:var(--txt);font-weight:700;margin-bottom:2px}
+    .server-detail{color:var(--txt3);font-size:.8rem}
+    .server-players{color:var(--txt2);font-size:.85rem;min-width:80px;text-align:right}
+    .btn-join{padding:8px 20px;background:linear-gradient(135deg,var(--green2),var(--green3));color:var(--bg);border:none;border-radius:6px;cursor:pointer;font-weight:700;font-size:.85rem;transition:all .2s}
+    .btn-join:hover{transform:translateY(-2px)}
+    .btn-host{width:100%;padding:14px;background:transparent;color:var(--green);border:1px solid var(--green3);border-radius:8px;cursor:pointer;font-weight:700;font-size:1rem;transition:all .2s;margin-top:16px}
+    .btn-host:hover{background:var(--green4)}
+    .muted{color:var(--txt3);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a> <button class="btn-outline btn-small" data-login-btn>Sign In</button></div>
+  </nav>
+  <main class="wrap">
+    <div class="card">
+      <h1>Servers</h1>
+      <p>Browse and join multiplayer servers. Host your own or join an existing one.</p>
+      <button class="btn-host" onclick="PTToast('Host server (demo)')">+ Host New Server</button>
+    </div>
+    <div class="card">
+      <h2>Available Servers</h2>
+      <div class="server-list" id="serverList"></div>
+    </div>
+  </main>
+  <script>
+    const servers = [
+      { name: 'GoStudios Official #1', detail: 'Chapter 0 - Season 0 | PvP Enabled', players: '12/32', online: true },
+      { name: 'GoStudios Official #2', detail: 'Chapter 0 - Season 0 | PvE Only', players: '8/32', online: true },
+      { name: 'Community - Fast XP', detail: 'Custom rules | 2x XP | Friendly', players: '24/32', online: true },
+      { name: 'Community - Hardcore', detail: 'Hardcore mode | No respawns', players: '5/16', online: true },
+      { name: 'Test Server', detail: 'Development server', players: '0/8', online: false },
+    ];
+    const list = document.getElementById('serverList');
+    list.innerHTML = servers.map(s => `
+      <div class="server-item">
+        <div class="server-status ${s.online ? 'online' : 'offline'}"></div>
+        <div class="server-info">
+          <div class="server-name">${s.name}</div>
+          <div class="server-detail">${s.detail}</div>
+        </div>
+        <div class="server-players">${s.players}</div>
+        <button class="btn-join" ${s.online ? '' : 'disabled'} onclick="PTToast('Joining ${s.name} (demo)')">Join</button>
+      </div>
+    `).join('');
+  </script>
+  <script src="script.js"></script>
+  <script src="shared.js"></script>
+</body>
+</html>

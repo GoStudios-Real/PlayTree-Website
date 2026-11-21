@@ -1,4 +1,4 @@
-const CACHE_NAME = 'playtree-v3';
+const CACHE_NAME = 'playtree-v4';
 const ASSETS = [
   './',
   'index.html',
@@ -8,10 +8,15 @@ const ASSETS = [
   'tos.html',
   'redeem.html',
   'profile.html',
+  'store.html',
+  'servers.html',
+  'minigames.html',
+  'tv.html',
   'robots.txt',
   'downloads/index.html',
   'styles.css',
   'script.js',
+  'shared.js',
   'manifest.json',
   'icon192.png',
   'icon512.png'

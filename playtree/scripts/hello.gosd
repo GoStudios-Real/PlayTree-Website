@@ -1,0 +1,18 @@
+# GoSD example script for PLAYTREE
+# Press F9 in-game to open the console, paste this, press F5 to run.
+
+fn fib(n) {
+    if n <= 1 { return n }
+    return fib(n-1) + fib(n-2)
+}
+
+for i in range(0, 10) {
+    print "fib(" + str(i) + ") = " + str(fib(i))
+}
+
+let nums = [1, 2, 3, 4, 5]
+let total = 0
+for n in nums {
+    total += n
+}
+print "sum = " + str(total)

@@ -1,0 +1,31 @@
+plugins {
+    id 'com.android.application'
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+android {
+    namespace 'com.gostudios.playtree'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "org.gostudios.playtree.tv"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.1"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}

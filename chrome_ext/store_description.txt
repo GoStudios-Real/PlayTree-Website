@@ -1,0 +1,43 @@
+PLAYTREE — Store Listing (Chrome Web Store / Google Play)
+=========================================================
+
+SHORT DESCRIPTION (132 chars):
+Play PLAYTREE for free! Multiplayer fantasy adventure RPG with boss fights, 5 classes, base building, creature taming & crafting.
+
+DETAILED DESCRIPTION:
+PLAYTREE is a free-to-play multiplayer fantasy adventure RPG set in a vibrant pixel-art world. Awaken as a hero, rebuild the corrupted lands, and restore balance across 4 epic rounds.
+
+FEATURES:
+✓ 5 Unique Classes — Guardian, Ranger, Mage, Mechanic, Beast Tamer
+✓ 4 Campaign Rounds — Each with unique bosses: Root Titan, Crystal Hydra, Sky Guardian, Hollow King
+✓ 8+ Unique Boss Fights — Each boss has multiple attack phases
+✓ Base Building — Construct and upgrade your own base with defenses and crafting stations
+✓ Creature Taming — Tame forest creatures and build your companion team
+✓ Deep Crafting System — Weapons, potions, pet treats, and totems
+✓ Multiplayer — Host or join games with friends, real-time chat
+✓ Character Customization — Hats, auras, trails, body colors, titles
+✓ Battle Pass — Complete challenges to unlock exclusive rewards
+✓ Weather System — Dynamic rain, snow, and fog affecting gameplay
+✓ Day/Night Cycle — Enemies change behavior based on time of day
+✓ Skill Trees — Unlock and upgrade class-specific abilities
+✓ Enchanting — Enhance weapons with fire, frost, lifesteal, and more
+✓ Fishing Minigame — Catch rare fish for gold and XP
+✓ Controller & Touch Support — Gamepad and touchscreen controls
+✓ GoStudios Account System — Sign in, track progress, unlock achievements
+✓ Free to Play — No microtransactions, no pay-to-win
+
+PLATFORMS: Windows, Android (APK/Google Play), Xbox (planned)
+DEVELOPER: GoConsole Game Studios / GoStudios
+PUBLISHER: PlayTree Studios
+RELEASE: Chapter 0 — Season 0
+
+CATEGORY: Games / Action / Adventure / RPG
+LANGUAGE: English
+PRICE: Free
+
+GOOGLE PLAY PACKAGE: org.gostudios.playtree
+SUPPORT EMAIL: support@gostudios.com
+WEBSITE: https://playtree.game
+
+SEARCH KEYWORDS:
+playtree, playtree game, gostudios, goconsole, fantasy rpg, free game, multiplayer adventure, boss fights, indie game, pixel art game, action rpg, crafting game, base building, taming game, free pc game, windows game, android game, apk, play store, adventure game 2026
