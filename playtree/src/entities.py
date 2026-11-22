@@ -26,10 +26,19 @@ class Enemy:
         self.vx = 0
         self.vy = 0
         self.glow_t = random.uniform(0, 6.28)
+        self.hit_flash = 0.0
+        self.knockback_x = 0.0
+        self.knockback_y = 0.0
 
     def update(self, dt, player_x, player_y):
         self.anim_time += dt
         self.glow_t += dt
+        self.hit_flash = max(0.0, self.hit_flash - dt)
+        self.x += self.knockback_x * dt
+        self.y += self.knockback_y * dt
+        decay = max(0, 1 - dt * 8)
+        self.knockback_x *= decay
+        self.knockback_y *= decay
         self.state_timer = max(0, self.state_timer - dt)
         self.attack_cooldown = max(0, self.attack_cooldown - dt)
 
@@ -99,6 +108,14 @@ class Enemy:
             pygame.draw.circle(screen, RED, (int(ex_s), int(ey_s)), 3)
             pygame.draw.circle(screen, (200, 0, 0), (int(ex_s), int(ey_s)), 1.5)
 
+        # Hit flash - white overlay
+        if self.hit_flash > 0:
+            flash_alpha = int(220 * (self.hit_flash / 0.15))
+            flash = pygame.Surface((self.size * 2 + 8, self.size * 2 + 8), pygame.SRCALPHA)
+            pygame.draw.circle(flash, (255, 255, 255, flash_alpha),
+                             (self.size + 4, self.size + 4), self.size + 2)
+            screen.blit(flash, (sx - self.size - 4, sy + body_offset - self.size - 4))
+
         # HP bar
         bar_w = self.size * 2
         bar_h = 3
@@ -118,6 +135,7 @@ class Enemy:
 
     def take_damage(self, amount):
         self.hp -= amount
+        self.hit_flash = 0.15
         return self.hp <= 0
 
 class Creature:

@@ -96,27 +96,33 @@ def save_game(player, game=None, slot=0):
         data["achievements"] = {}
         data["skill_points"] = 3
         data["skill_levels"] = {}
-    with open(_slot_file(slot), "w") as f:
+    # Atomic write: write to temp, then replace. Prevents corruption on crash.
+    final_path = _slot_file(slot)
+    tmp_path = final_path + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    if os.path.exists(final_path):
+        try:
+            os.replace(final_path, final_path + ".bak")  # keep previous as backup
+        except Exception:
+            pass
+    os.replace(tmp_path, final_path)
     return True
 
 def load_game(slot=0):
     sf = _slot_file(slot)
-    if os.path.exists(sf):
-        try:
-            with open(sf, "r") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    # Fallback to old save.json for slot 0
-    if slot == 0:
-        old = _old_save_file()
-        if os.path.exists(old):
+    # Try main save, then backup, then old save.json
+    for path in (sf, sf + ".bak", _old_save_file() if slot == 0 else ""):
+        if path and os.path.exists(path):
             try:
-                with open(old, "r") as f:
-                    return json.load(f)
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if isinstance(data, dict) and data.get("name") is not None:
+                    return data
             except Exception:
-                pass
+                continue
     return None
 
 def has_save(slot=0):

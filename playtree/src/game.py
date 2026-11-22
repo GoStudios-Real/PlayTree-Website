@@ -1035,6 +1035,13 @@ class Game:
             hits = CombatSystem.check_attack(self.player.x, self.player.y, 35,
                                             self.player.facing, self.enemies, self.player.attack_power)
             for enemy, dead in hits:
+                # Knockback away from player
+                dx_k = enemy.x - self.player.x
+                dy_k = enemy.y - self.player.y
+                dist_k = max(1, math.sqrt(dx_k*dx_k + dy_k*dy_k))
+                enemy.knockback_x = (dx_k / dist_k) * 180
+                enemy.knockback_y = (dy_k / dist_k) * 180
+                self.camera_shake = max(self.camera_shake, 2)
                 if dead:
                     self.player.add_xp(25)
                     self.quests.update_progress("defeat", "enemy")
