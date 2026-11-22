@@ -24,7 +24,7 @@ class CommunityHub:
         cx = WIDTH // 2
         start_y = 200
         gap = 70
-        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Play on TV", "Back"]
+        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Play on TV", "Follow on X", "Back"]
         self.hub_buttons = []
         for i, lbl in enumerate(labels):
             r = pygame.Rect(cx - 200, start_y + i * gap, 400, 50)
@@ -84,6 +84,10 @@ class CommunityHub:
                             self.screen = "minigames"
                         elif lbl == "Play on TV":
                             self.screen = "tv"
+                        elif lbl == "Follow on X":
+                            import webbrowser
+                            webbrowser.open("https://x.com/PlayTreeReal")
+                            self.message = "Opening @PlayTreeReal on X"
                         return True
             # back button on sub-screens
             back_r = pygame.Rect(40, HEIGHT - 70, 120, 40)
