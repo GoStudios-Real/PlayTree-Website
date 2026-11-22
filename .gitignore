@@ -43,3 +43,7 @@ desktop.ini
 playtree_currency.json
 rhystech_*.json
 gostudios_*.json
+
+# Recorded devlog clips (large binaries - keep local)
+devlog_clip_01.gif
+devlog_clip_live.gif

@@ -107,6 +107,7 @@ class Game:
         self.camera_x = 0
         self.camera_y = 0
         self.camera_shake = 0
+        self.hit_stop = 0.0  # brief freeze on impactful hits
 
         self.combo_display = 0
         self.combo_display_timer = 0
@@ -463,7 +464,9 @@ class Game:
         self.skill_tree = SkillTree(pc2, self.audio)
         for sid, lvl in data.get("skill_levels", {}).items():
             if sid in self.skill_tree.skills:
-                self.skill_tree.skills[sid]["level"] = min(lvl, self.skill_tree.skills[sid]["max_level"])
+                sk = self.skill_tree.skills[sid]
+                max_lvl = sk.get("max_level", sk.get("max", 1))
+                sk["level"] = min(lvl, max_lvl)
         self.skill_tree.skill_points = data.get("skill_points", 3)
         # Achievements
         self.achievements = AchievementSystem(self.audio)
@@ -1047,6 +1050,7 @@ class Game:
                     self.quests.update_progress("defeat", "enemy")
                     self._drop_gold(enemy.x, enemy.y)
                     self.enemies.remove(enemy)
+                    self.hit_stop = 0.06
                     self.round_enemies_killed += 1
                     self.player.particles.burst(enemy.x, enemy.y, GOLD, 15, 4, 30, 5)
                     self._spawn_new_enemy()
@@ -1086,6 +1090,7 @@ class Game:
                         self.player.add_xp(25)
                         self._drop_gold(enemy.x, enemy.y)
                         self.enemies.remove(enemy)
+                        self.hit_stop = 0.06
                         self.round_enemies_killed += 1
                         self._spawn_new_enemy()
                         self.quests.update_progress("defeat", "enemy")
@@ -1208,6 +1213,7 @@ class Game:
                         self.quests.update_progress("defeat", "enemy")
                         self._drop_gold(enemy.x, enemy.y)
                         self.enemies.remove(enemy)
+                        self.hit_stop = 0.06
                         self.round_enemies_killed += 1
                         self.particles.burst(enemy.x, enemy.y, GOLD, 15, 4, 30, 5)
                         self._spawn_new_enemy()
@@ -1269,6 +1275,11 @@ class Game:
                                    "color": GOLD})
 
     def update(self, dt):
+        # Hit-stop: freeze gameplay for a few frames on impactful hits
+        if self.hit_stop > 0:
+            self.hit_stop -= dt
+            self.camera_shake = max(0, self.camera_shake - dt * 10)
+            return  # skip gameplay updates but keep rendering
         self.dt = dt
         self._check_controller_connection()
         self.time += dt
@@ -1525,6 +1536,7 @@ class Game:
                         if enemy.take_damage(pet_data.get("level", 1) * 2):
                             self._drop_gold(enemy.x, enemy.y)
                             self.enemies.remove(enemy)
+                            self.hit_stop = 0.06
                             self.round_enemies_killed += 1
                             self._spawn_new_enemy()
                             self.quests.update_progress("defeat", "enemy")

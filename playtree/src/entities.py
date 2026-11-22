@@ -108,6 +108,15 @@ class Enemy:
             pygame.draw.circle(screen, RED, (int(ex_s), int(ey_s)), 3)
             pygame.draw.circle(screen, (200, 0, 0), (int(ex_s), int(ey_s)), 1.5)
 
+        # Attack telegraph - red warning ring
+        if self.state == "attacking" and self.attack_cooldown > 1.0:
+            t = 1.0 - (self.attack_cooldown - 1.0) / 0.5
+            pulse = int(100 + abs(math.sin(self.anim_time * 20)) * 155)
+            ring_r = self.size + 6 + int(t * 10)
+            tele = pygame.Surface((ring_r * 2 + 4, ring_r * 2 + 4), pygame.SRCALPHA)
+            pygame.draw.circle(tele, (255, 60, 60, pulse), (ring_r + 2, ring_r + 2), ring_r, 3)
+            screen.blit(tele, (sx - ring_r - 2, sy - ring_r - 2))
+
         # Hit flash - white overlay
         if self.hit_flash > 0:
             flash_alpha = int(220 * (self.hit_flash / 0.15))
