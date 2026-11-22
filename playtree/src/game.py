@@ -553,6 +553,21 @@ class Game:
 
     def handle_events(self, events):
         events = self._convert_finger_to_mouse(events)
+        # Map display-space mouse coords (e.g. 1920x1080 fullscreen) to
+        # game-space (1280x720) so buttons line up with what is drawn.
+        converted = []
+        for event in events:
+            if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN,
+                              pygame.MOUSEBUTTONUP) and hasattr(event, 'pos'):
+                gpos = display_to_game(event.pos)
+                if gpos != event.pos:
+                    event = pygame.event.Event(event.type,
+                                               pos=gpos,
+                                               button=getattr(event, 'button', 1),
+                                               buttons=getattr(event, 'buttons', (0,0,0)),
+                                               rel=getattr(event, 'rel', (0,0)))
+            converted.append(event)
+        events = converted
         for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
