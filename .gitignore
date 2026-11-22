@@ -21,6 +21,9 @@ playtree/.buildozer/
 website/downloads/*.exe
 website/downloads/*.apk
 
+# Gradle (downloaded tool, not part of repo)
+gradle-8.5/
+
 # IDE
 .vscode/
 .idea/
