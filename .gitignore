@@ -18,6 +18,8 @@ playtree/dist/
 playtree/build/
 playtree/bin/
 playtree/.buildozer/
+website/downloads/*.exe
+website/downloads/*.apk
 
 # IDE
 .vscode/
