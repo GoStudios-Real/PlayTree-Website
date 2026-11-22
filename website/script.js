@@ -179,13 +179,12 @@ function initTrailer() {
   if(!btn||!modal)return;
   const overlay=modal.querySelector('.modal-overlay');
   const close=modal.querySelector('.modal-close');
-  const iframe=document.getElementById('trailer-iframe');
-  const src=iframe?iframe.getAttribute('src'):'';
-  function open(){modal.classList.remove('hidden');if(iframe&&src)iframe.setAttribute('src',src);SFX.play('click');}
-  function shut(){modal.classList.add('hidden');if(iframe)iframe.setAttribute('src','about:blank');setTimeout(()=>{if(iframe&&src)iframe.setAttribute('src',src);},200);}
+  function open(){modal.classList.remove('hidden');SFX.play('click');}
+  function shut(){modal.classList.add('hidden');}
   btn.addEventListener('click',open);
   if(close)close.addEventListener('click',shut);
   if(overlay)overlay.addEventListener('click',shut);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.classList.contains('hidden'))shut();});
 }
 
 function initSfx() {
