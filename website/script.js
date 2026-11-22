@@ -11,7 +11,7 @@
 
 // Auto-update check (website version)
 (function() {
-  const CURRENT_VERSION = '1.0.1';
+  const CURRENT_VERSION = '1.1.0';
   const stored = localStorage.getItem('playtree_web_version');
   if (stored && stored !== CURRENT_VERSION) console.log('PLAYTREE website updated to v' + CURRENT_VERSION);
   localStorage.setItem('playtree_web_version', CURRENT_VERSION);

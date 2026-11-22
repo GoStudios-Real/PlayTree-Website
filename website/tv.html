@@ -16,8 +16,6 @@
     .hint{margin-top:40px;font-size:1.1rem;color:#9aafa0}
     .progress{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:min(700px,80vw);height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
     .progress i{display:block;height:100%;width:0;background:#55ef78;transition:width .2s}
-    .code{margin-top:24px;font-family:monospace;font-size:1.6rem;color:#55ef78;letter-spacing:.2em}
-    .hidden{display:none!important}
   </style>
 </head>
 <body>
@@ -25,37 +23,26 @@
     <div class="bg"></div>
     <div class="content">
       <h1 class="logo">PLAYTREE</h1>
-      <p class="tag">Awaken · Rebuild · Restore Balance</p>
-      <p class="hint" id="hint">Press any button to start</p>
-      <p class="code hidden" id="code"></p>
+      <p class="tag">Awaken &middot; Rebuild &middot; Restore Balance</p>
+      <p class="hint" id="hint">Loading PLAYTREE...</p>
     </div>
     <div class="progress"><i id="bar"></i></div>
   </div>
   <script>
-    // TV mode: listen for remote/key input and show a pairing code.
+    // TV mode: auto-load, no auth code required.
     const hint = document.getElementById('hint');
-    const codeEl = document.getElementById('code');
     const bar = document.getElementById('bar');
     let progress = 0;
-    const code = String(Math.floor(100000 + Math.random()*900000));
-    document.addEventListener('keydown', () => activate());
-    document.addEventListener('click', () => activate());
-    let active = false;
-    function activate() {
-      if (active) return;
-      active = true;
-      hint.textContent = 'Connecting to PLAYTREE...';
-      const timer = setInterval(() => {
-        progress += 4;
-        bar.style.width = progress + '%';
-        if (progress >= 100) {
-          clearInterval(timer);
-          hint.textContent = 'Connected! Open playtree.game on your phone';
-          codeEl.textContent = 'Code: ' + code;
-          codeEl.classList.remove('hidden');
-        }
-      }, 60);
-    }
+    const timer = setInterval(() => {
+      progress += 5;
+      bar.style.width = progress + '%';
+      if (progress >= 100) {
+        clearInterval(timer);
+        hint.textContent = 'PLAYTREE TV Ready';
+        // Redirect to the game download / play page after load
+        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+      }
+    }, 40);
   </script>
 </body>
 </html>
