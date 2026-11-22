@@ -9,7 +9,7 @@ v1.1.1 — Awaken. Rebuild. Restore Balance.
 - [x] Real Stripe backend (API keys, not links)
 - [x] Real multiplayer lobby server (host/join)
 - [x] TV app (no auth code)
-- [x] Website + Discord/YouTube/X/social links
+- [x] Website + Discord/X/social links
 - [x] .exe builds + GitHub releases
 
 ## Phase 1 — Core Loop Polish (CURRENT)
@@ -51,11 +51,10 @@ The tree isn't just decor — make it a core mechanic:
 - [ ] More weapons/skills
 
 ## Phase 4 — Audience (START NOW)
-### YouTube (devlogs)
-- Weekly devlog video: "Building PLAYTREE — Episode N"
-- Show new features, bugs fixed, plan for next week
-- Shorts: 30-sec clips of cool moments (boss kills, combos)
-
+### X (@PlayTreeReal)
+- Daily devlog posts: new features, bugs fixed, screenshots
+- Thread format: "Building PLAYTREE - Episode N"
+- Link: https://x.com/PlayTreeReal
 ### TikTok/Shorts
 - Daily quick clips: satisfying combat, tree growth, pet moments
 - Hook in first 2 seconds, captions, trending audio
@@ -63,7 +62,7 @@ The tree isn't just decor — make it a core mechanic:
 ### Discord
 - Community server for playtesters
 - Channels: #devlogs, #bug-reports, #feedback, #showcase
-- Link: discord.gg/playtree (configure your real invite)
+- Link: https://discord.com/users/1451398119110738147
 
 ### Reddit
 - r/gamedev, r/IndieDev — weekly devlog posts
@@ -93,5 +92,6 @@ The tree isn't just decor — make it a core mechanic:
 ## Key Metrics
 - 3 minutes of fun → 30 minutes → 2 hours
 - 100 Discord members
-- 10 YouTube devlogs
+- 100 X devlog posts
 - 1,000 wishlists on Steam
+

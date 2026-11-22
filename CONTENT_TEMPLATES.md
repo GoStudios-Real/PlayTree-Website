@@ -1,26 +1,26 @@
-# PLAYTREE — Content Templates
+# PLAYTREE - Content Templates
 
-## YouTube Devlog Description Template
+## X (Twitter) Devlog Post Template
 ```
-Building PLAYTREE — Episode N: [Title]
+Building PLAYTREE - Episode N: [Title]
 
-In this episode: [what you built/fixed]
+This week:
 - [feature 1]
-- [feature 2]
+- [bug fixed]
 
-PLAYTREE is a fantasy action RPG by GoConsole Game Studios / GoStudios.
 Awaken. Rebuild. Restore Balance.
+A fantasy action RPG by GoConsole Game Studios / GoStudios.
 
-🔗 Discord: https://discord.gg/playtree
-🔗 X: https://x.com/PlayTreeGame
-🔗 Play: https://gostudios-real.github.io/PlayTree-Website/
+X: https://x.com/PlayTreeReal
+Discord: https://discord.com/users/1451398119110738147
+Play: https://gostudios-real.github.io/PlayTree-Website/
 
 #gamedev #indiedev #pygame #playtree
 ```
 
 ## Reddit Devlog Post Template (r/IndieDev)
 ```
-Title: [Devlog #N] PLAYTREE — [what you did this week]
+Title: [Devlog #N] PLAYTREE - [what you did this week]
 
 Body:
 Hey r/IndieDev! I've been building PLAYTREE, a fantasy action RPG where you
@@ -45,11 +45,11 @@ Links: [website] [discord]
 - "I scripted a whole programming language into my game" (GoSD F9 console)
 - "My game runs on a TV, phone, AND PC" + montage
 
-## Discord Server Setup
-Server name: PLAYTREE — GoConsole Game Studios
-Channels:
+## Discord Setup
+Profile: https://discord.com/users/1451398119110738147
+Channels (when you make a server):
 - #welcome (rules + intro)
-- #devlogs (auto-post new videos)
+- #devlogs (progress updates)
 - #screenshots (community media)
 - #bug-reports (bug template)
 - #feedback (suggestions)
@@ -59,5 +59,10 @@ Channels:
 ## Weekly Schedule (suggested)
 - Mon: Post devlog clip (TikTok/Shorts)
 - Wed: Reddit devlog post
-- Fri: YouTube long-form devlog
+- Fri: X devlog thread
 - Daily: 1 short clip or screenshot
+
+## Links
+- X: https://x.com/PlayTreeReal
+- Discord: https://discord.com/users/1451398119110738147
+- Website: https://gostudios-real.github.io/PlayTree-Website/

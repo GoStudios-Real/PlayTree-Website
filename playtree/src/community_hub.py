@@ -22,9 +22,9 @@ class CommunityHub:
 
     def _build_hub_buttons(self):
         cx = WIDTH // 2
-        start_y = 200
-        gap = 70
-        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Play on TV", "Follow on X", "Back"]
+        start_y = 160
+        gap = 60
+        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Play on TV", "Follow on X", "Join Discord", "Back"]
         self.hub_buttons = []
         for i, lbl in enumerate(labels):
             r = pygame.Rect(cx - 200, start_y + i * gap, 400, 50)
@@ -88,6 +88,10 @@ class CommunityHub:
                             import webbrowser
                             webbrowser.open("https://x.com/PlayTreeReal")
                             self.message = "Opening @PlayTreeReal on X"
+                        elif lbl == "Join Discord":
+                            import webbrowser
+                            webbrowser.open("https://discord.com/users/1451398119110738147")
+                            self.message = "Opening PLAYTREE on Discord"
                         return True
             # back button on sub-screens
             back_r = pygame.Rect(40, HEIGHT - 70, 120, 40)
