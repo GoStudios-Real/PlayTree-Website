@@ -110,9 +110,9 @@ class HUD:
                       (80, 180, 255), (180, 80, 255), "Energy")
 
     def _draw_minimap(self, screen):
-        mm_size = 150
-        mm_x = WIDTH - mm_size - 20
-        mm_y = 20
+        mm_size = 120
+        mm_x = WIDTH - mm_size - 16
+        mm_y = 16
         # Background
         pygame.draw.rect(screen, (15, 15, 30, 200), (mm_x, mm_y, mm_size, mm_size), border_radius=6)
         pygame.draw.rect(screen, (60, 180, 80, 80), (mm_x, mm_y, mm_size, mm_size), border_radius=6, width=1)
@@ -134,7 +134,7 @@ class HUD:
 
     def _draw_quest_tracker(self, screen):
         qx = 20
-        qy = HEIGHT - 200
+        qy = HEIGHT - 180
         pygame.draw.rect(screen, (15, 15, 30, 200), (qx, qy, 280, 180), border_radius=6)
         pygame.draw.rect(screen, (60, 180, 80, 60), (qx, qy, 280, 180), border_radius=6, width=1)
         title = self.title_font.render("QUESTS", True, (100, 200, 120))

@@ -74,10 +74,10 @@ class BossHealthBar:
         if not self.visible or not self.boss:
             return
         boss = self.boss
-        bar_w = 400
-        bar_h = 24
+        bar_w = 320
+        bar_h = 22
         bar_x = (WIDTH - bar_w) // 2
-        bar_y = 20
+        bar_y = 16
 
         bg = pygame.Surface((bar_w + 6, bar_h + 6), pygame.SRCALPHA)
         pygame.draw.rect(bg, (0, 0, 0, 200), bg.get_rect(), border_radius=5)

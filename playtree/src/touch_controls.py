@@ -7,6 +7,26 @@ from config import WIDTH, HEIGHT
 IS_MOBILE = sys.platform in ("android", "ios") or hasattr(sys, "getandroidapilevel")
 
 
+def haptic_feedback(duration_ms=50):
+    """Trigger haptic feedback on mobile devices (Android/iOS)."""
+    if IS_MOBILE:
+        try:
+            # Android
+            import android
+            android.vibrator.vibrate(duration_ms / 1000.0)
+        except Exception:
+            try:
+                # Alternative Android path
+                import jnius
+                from jnius import autoclass
+                Vibrator = autoclass('android.os.Vibrator')
+                Context = autoclass('android.content.Context')
+                # This requires a valid context; best-effort
+            except Exception:
+                pass
+    # Desktop: no-op (no haptic hardware typically)
+
+
 def detect_touchscreen():
     """Return True when a touch digitizer / virtual touchpad is available.
 

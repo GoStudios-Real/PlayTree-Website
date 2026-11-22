@@ -2165,7 +2165,7 @@ class Game:
             alpha = int(255 * min(1, self.message_timer))
             msg_font = pygame.font.Font(None, 28)
             msg_surf = msg_font.render(self.message, True, (*GREEN_GLOW[:3], alpha))
-            msg_rect = msg_surf.get_rect(center=(WIDTH//2, HEIGHT - 190))
+            msg_rect = msg_surf.get_rect(center=(WIDTH//2, HEIGHT - 220))
             bg = pygame.Surface((msg_surf.get_width() + 20, msg_surf.get_height() + 10), pygame.SRCALPHA)
             bg.fill((10, 15, 10, min(180, alpha)))
             self.screen.blit(bg, (msg_rect.x - 10, msg_rect.y - 5))
