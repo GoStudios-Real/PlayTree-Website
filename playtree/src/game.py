@@ -621,6 +621,10 @@ class Game:
                 elif result == "community":
                     self.community_hub.open = True
                     self.community_hub.screen = "hub"
+                elif result == "play_on_tv":
+                    import webbrowser
+                    webbrowser.open("https://gostudios-real.github.io/PlayTree-Website/tv.html")
+                    self.show_message("Opening PLAYTREE TV in browser...", 3)
                 elif result == "quit":
                     self.running = False
 

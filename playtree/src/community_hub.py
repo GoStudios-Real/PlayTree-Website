@@ -24,7 +24,7 @@ class CommunityHub:
         cx = WIDTH // 2
         start_y = 200
         gap = 70
-        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Back"]
+        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Play on TV", "Back"]
         self.hub_buttons = []
         for i, lbl in enumerate(labels):
             r = pygame.Rect(cx - 200, start_y + i * gap, 400, 50)
@@ -48,6 +48,18 @@ class CommunityHub:
             if self.screen == "redeem" and event.key == pygame.K_BACKSPACE:
                 self.input_text = self.input_text[:-1]
                 return True
+            if self.screen == "tv" and event.key == pygame.K_BACKSPACE:
+                self.input_text = self.input_text[:-1]
+                return True
+            if self.screen == "tv" and event.key == pygame.K_RETURN:
+                import webbrowser
+                webbrowser.open("https://gostudios-real.github.io/PlayTree-Website/connect.html")
+                self.message = "Opened connect page in browser"
+                return True
+            if self.screen == "tv" and event.unicode and len(event.unicode) == 1 and event.unicode.isdigit():
+                if len(self.input_text) < 6:
+                    self.input_text += event.unicode
+                return True
             if self.screen == "redeem" and event.unicode and len(event.unicode) == 1 and event.unicode.isprintable():
                 self.input_text += event.unicode
                 return True
@@ -70,6 +82,8 @@ class CommunityHub:
                             self.screen = "servers"
                         elif lbl == "Minigames":
                             self.screen = "minigames"
+                        elif lbl == "Play on TV":
+                            self.screen = "tv"
                         return True
             # back button on sub-screens
             back_r = pygame.Rect(40, HEIGHT - 70, 120, 40)
@@ -156,6 +170,8 @@ class CommunityHub:
             self._draw_servers(screen)
         elif self.screen == "minigames":
             self._draw_minigames(screen)
+        elif self.screen == "tv":
+            self._draw_tv(screen)
 
     def _draw_hub(self, screen):
         title = self.font.render("COMMUNITY HUB", True, (80, 255, 120))
@@ -239,6 +255,33 @@ class CommunityHub:
         pygame.draw.rect(screen, (40, 40, 40), back, border_radius=6)
         bt = self.small.render("Back", True, (200, 200, 200))
         screen.blit(bt, bt.get_rect(center=back.center))
+
+    def _draw_tv(self, screen):
+        title = self.font.render("PLAY ON TV", True, (80, 255, 120))
+        screen.blit(title, title.get_rect(center=(WIDTH // 2, 120)))
+        info = self.small.render("Enter the 6-digit code from your PLAYTREE TV app", True, (200, 255, 200))
+        screen.blit(info, info.get_rect(center=(WIDTH // 2, 180)))
+        # code input
+        box = pygame.Rect(WIDTH // 2 - 150, 220, 300, 40)
+        pygame.draw.rect(screen, (10, 20, 12), box)
+        pygame.draw.rect(screen, (80, 255, 120), box, 2)
+        t = self.font.render(self.input_text + "_", True, (200, 255, 200))
+        screen.blit(t, (box.x + 10, box.y + 8))
+        hint = self.tiny.render("Type the code shown on your TV, then press Enter", True, (150, 180, 150))
+        screen.blit(hint, hint.get_rect(center=(WIDTH // 2, 280)))
+        btn = pygame.Rect(WIDTH // 2 - 100, 310, 200, 40)
+        pygame.draw.rect(screen, (40, 80, 50), btn, border_radius=6)
+        bt = self.small.render("Open Connect Page", True, (200, 255, 200))
+        screen.blit(bt, bt.get_rect(center=btn.center))
+        if self.message:
+            m = self.small.render(self.message, True, (255, 200, 100))
+            screen.blit(m, m.get_rect(center=(WIDTH // 2, 370)))
+        note = self.tiny.render("Or visit gostudios-real.github.io/PlayTree-Website/connect.html", True, (120, 140, 120))
+        screen.blit(note, note.get_rect(center=(WIDTH // 2, 420)))
+        back = pygame.Rect(40, HEIGHT - 70, 120, 40)
+        pygame.draw.rect(screen, (40, 40, 40), back, border_radius=6)
+        bbt = self.small.render("Back", True, (200, 200, 200))
+        screen.blit(bbt, bbt.get_rect(center=back.center))
 
     def _draw_minigames(self, screen):
         title = self.font.render("MINIGAMES", True, (80, 255, 120))
