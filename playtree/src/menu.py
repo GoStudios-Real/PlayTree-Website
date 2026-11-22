@@ -17,6 +17,8 @@ class MainMenu:
         self.hovered = -1
         self.menu_items = ["New Game", "Continue", "Locker", "Store", "Daily Rewards", "Leaderboards", "Update Log", "Community", "Play on TV", "Settings", "Quit"]
         self.has_save = has_save
+        self.menu_start_y = 350  # below the world tree canopy
+        self.menu_gap = 29       # fits 11 items above footer
         self.transition_alpha = 0
         self.transitioning = False
         self.transition_target = None
@@ -45,10 +47,10 @@ class MainMenu:
         return islands
 
     def _update_menu_rects(self):
-        menu_start_y = 380
+        menu_start_y = self.menu_start_y
         self.menu_rects = []
         for i, item in enumerate(self.menu_items):
-            y = menu_start_y + i * 28
+            y = menu_start_y + i * self.menu_gap
             f = self.font_menu
             txt = f"> {item} <" if self.selected == i else item
             surf = f.render(txt, True, (255, 255, 255))
@@ -257,9 +259,9 @@ class MainMenu:
         tag_rect = tag.get_rect(center=(WIDTH//2, title_y + 115))
         self.screen.blit(tag, tag_rect)
 
-        menu_start_y = 380
+        menu_start_y = self.menu_start_y
         for i, item in enumerate(self.menu_items):
-            y = menu_start_y + i * 28
+            y = menu_start_y + i * self.menu_gap
             is_sel = i == self.selected
             is_hov = i == self.hovered
             active = is_sel or is_hov
@@ -322,7 +324,7 @@ class MainMenu:
             xbox_icons.draw_menu_prompt(self.screen, [("A", "ENTER", "Select"), ("B", "ESC", "Quit")], HEIGHT - 38)
 
     def _draw_world_tree(self):
-        cx, cy = WIDTH // 2, HEIGHT // 2 - 20
+        cx, cy = WIDTH // 2, HEIGHT // 2 - 100
 
         # Main trunk
         trunk_color = (60, 40, 30)

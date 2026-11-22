@@ -381,7 +381,7 @@ class Game:
         data = load_game()
         if not data:
             self.show_message("No save data found!", 2)
-            return
+            return False
         class_map = {c.value: c for c in self.class_cycle}
         pc = class_map.get(data.get("player_class", "Guardian"), PlayerClass.GUARDIAN)
         self.player = Player(data.get("x", WORLD_W//2), data.get("y", WORLD_H//2), pc)
@@ -490,6 +490,7 @@ class Game:
             self.leaderboards.data = lb_data
         self.pet_manager = PetManager()
         self.show_message("Welcome back, " + self.player.name + "!", 3)
+        return True
 
     def _spawn_initial_entities(self):
         for _ in range(8):
@@ -586,15 +587,18 @@ class Game:
                     self.name_input = user_data["name"] if user_data else ""
                     self.typing_name = True
                 elif result == "continue":
-                    self._load_game()
+                    if not self._load_game():
+                        self.show_message("No save data found!", 2)
+                    else:
+                        self.state = GameState.PLAYING
                 elif result == "locker":
-                    self._load_game()
-                    self.locker_open = True
-                    self.state = GameState.PLAYING
+                    if self._load_game():
+                        self.locker_open = True
+                        self.state = GameState.PLAYING
                 elif result == "store":
-                    self._load_game()
-                    self.shop_open = True
-                    self.state = GameState.PLAYING
+                    if self._load_game():
+                        self.shop_open = True
+                        self.state = GameState.PLAYING
                 elif result == "settings":
                     self.state = GameState.SETTINGS
                     self.settings_hover = -1
@@ -1750,7 +1754,7 @@ class Game:
                 nr_f = pygame.font.Font(None, 20)
                 pulse = int(math.sin(self.time * 3) * 30 + 225)
                 nr_s = nr_f.render("Daily Reward Available! (F10)", True, (*GOLD[:3], pulse))
-                self.screen.blit(nr_s, (WIDTH//2 - nr_s.get_width()//2, HEIGHT - 90))
+                self.screen.blit(nr_s, (WIDTH - nr_s.get_width() - 20, 50))
             if self.daily_rewards_open:
                 self.daily_rewards.draw(self.screen)
             if self.leaderboards_open:
