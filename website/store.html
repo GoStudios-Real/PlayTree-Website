@@ -109,14 +109,27 @@
       document.getElementById('tpBal').textContent = tp.toLocaleString();
       document.getElementById('tcBal').textContent = tc.toLocaleString();
     }
-    const STRIPE_LINKS = (window.PLAYTREE_STRIPE_LINKS || {});
-    function startCheckout(linkKey, amt, isPoints, price) {
-      var link = STRIPE_LINKS[linkKey];
+    const BACKEND = (window.PLAYTREE_BACKEND_URL || 'http://localhost:5000');
+    async function startCheckout(linkKey, amt, isPoints, price) {
+      // Try real Stripe via backend API first
+      try {
+        const res = await fetch(BACKEND + '/create-checkout-session', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({product: linkKey, user: (typeof PTCurrentName === 'function' ? PTCurrentName() : 'guest')})
+        });
+        const data = await res.json();
+        if (data.url) { window.location.href = data.url; return; }
+        if (data.sessionId && window.stripe) { window.stripe.redirectToCheckout({sessionId: data.sessionId}); return; }
+      } catch(e) { console.warn('Backend unavailable, falling back:', e); }
+      // Fallback: Stripe Payment Link
+      var link = (window.PLAYTREE_STRIPE_LINKS || {})[linkKey];
       if (link) { window.location.href = link; return; }
+      // Demo mode
       if (isPoints) { tp += amt; localStorage.setItem('tree_points', tp); }
       else { tc += amt; localStorage.setItem('tree_coins', tc); }
       updateBal();
-      PTToast('Purchased ' + amt + ' ' + (isPoints ? 'Tree Points' : 'Tree Coins') + ' for $' + price + ' (Demo - set Stripe link in store-config.js)');
+      PTToast('Purchased ' + amt + ' ' + (isPoints ? 'Tree Points' : 'Tree Coins') + ' for $' + price + ' (Demo)');
     }
     function buyPoints(amt, price) { startCheckout('points_' + amt, amt, true, price); }
     function buyCoins(amt, price) { startCheckout('coins_' + amt, amt, false, price); }

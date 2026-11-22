@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE - Connect to TV</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}
+    .wrap{max-width:600px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1}
+    .card{background:var(--bg2);border:1px solid var(--green4);border-radius:16px;padding:32px;margin-bottom:24px;text-align:center}
+    h1{color:var(--green);font-size:2rem;margin-bottom:8px}
+    p{color:var(--txt2);line-height:1.7}
+    .code-input{display:flex;gap:8px;justify-content:center;margin:24px 0}
+    .code-input input{width:60px;height:70px;font-size:2rem;text-align:center;border:2px solid var(--green4);background:var(--bg);color:var(--green);border-radius:8px;font-family:monospace;font-weight:900}
+    .code-input input:focus{border-color:var(--green);outline:none;box-shadow:0 0 12px rgba(85,239,120,.3)}
+    .btn-connect{padding:14px 40px;background:linear-gradient(135deg,var(--green2),var(--green3));color:var(--bg);border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:1.1rem}
+    .status{margin-top:20px;padding:16px;border-radius:10px;font-size:1rem}
+    .status.ok{background:rgba(85,239,120,.1);border:1px solid var(--green);color:var(--green)}
+    .status.err{background:rgba(255,100,100,.1);border:1px solid #ff6b6b;color:#ff6b6b}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a> <button class="btn-outline btn-small" data-login-btn>Sign In</button></div>
+  </nav>
+  <main class="wrap">
+    <div class="card">
+      <h1>Connect to TV</h1>
+      <p>Enter the 6-digit code shown on your PLAYTREE TV app to link your device.</p>
+      <div class="code-input">
+        <input type="text" maxlength="1" id="c1" inputmode="numeric">
+        <input type="text" maxlength="1" id="c2" inputmode="numeric">
+        <input type="text" maxlength="1" id="c3" inputmode="numeric">
+        <input type="text" maxlength="1" id="c4" inputmode="numeric">
+        <input type="text" maxlength="1" id="c5" inputmode="numeric">
+        <input type="text" maxlength="1" id="c6" inputmode="numeric">
+      </div>
+      <button class="btn-connect" onclick="connect()">Connect</button>
+      <div id="status" class="status hidden"></div>
+    </div>
+    <div class="card">
+      <h2>How to get the code</h2>
+      <p>1. Install PLAYTREE on your TV via <a href="tv.html" style="color:var(--green)">Play on TV</a></p>
+      <p>2. Open the app on your TV</p>
+      <p>3. Press any button on your TV remote</p>
+      <p>4. A 6-digit code will appear on screen</p>
+      <p>5. Enter it above to link your account</p>
+    </div>
+  </main>
+  <script>
+    // Auto-advance between inputs
+    const inputs = document.querySelectorAll('.code-input input');
+    inputs.forEach((inp, i) => {
+      inp.addEventListener('input', (e) => {
+        if (e.target.value && i < inputs.length - 1) inputs[i+1].focus();
+      });
+      inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && i > 0) inputs[i-1].focus();
+      });
+    });
+    inputs[0].focus();
+
+    function connect() {
+      const code = Array.from(inputs).map(i => i.value).join('');
+      const status = document.getElementById('status');
+      status.classList.remove('hidden', 'ok', 'err');
+      if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+        status.classList.add('err');
+        status.textContent = 'Please enter a valid 6-digit code.';
+        return;
+      }
+      // Store the connection code
+      localStorage.setItem('tv_pair_code', code);
+      localStorage.setItem('tv_paired_at', new Date().toISOString());
+      status.classList.add('ok');
+      status.textContent = 'Connected! Code ' + code + ' saved. Your PLAYTREE game will sync with this TV.';
+      PTToast('TV Connected: ' + code);
+    }
+  </script>
+  <script src="script.js"></script>
+  <script src="shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE Studio - Create Minigames</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding-top:90px}
+    .wrap{max-width:1000px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1}
+    .card{background:var(--bg2);border:1px solid var(--green4);border-radius:16px;padding:24px;margin-bottom:20px}
+    h1{color:var(--green);font-size:2rem;margin-bottom:8px}
+    h2{color:var(--green);margin-bottom:12px;font-size:1.2rem}
+    p{color:var(--txt2);line-height:1.7}
+    .editor{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:768px){.editor{grid-template-columns:1fr}}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;color:var(--green);font-size:.85rem;margin-bottom:6px;font-weight:600}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:var(--bg);border:1px solid var(--green4);border-radius:8px;color:var(--txt);font-size:.95rem}
+    .form-group textarea{min-height:120px;font-family:monospace;font-size:.85rem}
+    .btn{padding:12px 24px;background:linear-gradient(135deg,var(--green2),var(--green3));color:var(--bg);border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:1rem}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(80,255,120,.3)}
+    .preview{background:var(--bg);border:1px solid var(--green4);border-radius:12px;padding:20px;min-height:200px}
+    .preview h3{color:var(--green);margin-bottom:10px}
+    .preview pre{color:var(--txt2);font-size:.8rem;white-space:pre-wrap;word-break:break-all}
+    .notice{background:rgba(85,239,120,.08);border:1px solid rgba(85,239,120,.3);border-radius:8px;padding:12px;margin-bottom:16px;font-size:.85rem;color:var(--green)}
+  </style>
+</head>
+<body>
+  <div id="particles-bg"></div>
+  <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
+    <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a> <button class="btn-outline btn-small" data-login-btn>Sign In</button></div>
+  </nav>
+  <main class="wrap">
+    <div class="card">
+      <h1>PLAYTREE Studio</h1>
+      <p>Create custom minigames for PLAYTREE. Design your game, export the config, and load it in-game.</p>
+      <div class="notice">Minigames are defined as JSON configs. The desktop game loads them from the <code>minigames/</code> folder.</div>
+    </div>
+
+    <div class="editor">
+      <div class="card">
+        <h2>Minigame Editor</h2>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="mgName" placeholder="My Minigame" value="My Minigame">
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="mgType">
+            <option value="fishing">Fishing</option>
+            <option value="racing">Racing</option>
+            <option value="puzzle">Puzzle</option>
+            <option value="defense">Tower Defense</option>
+            <option value="collection">Collection</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Difficulty</label>
+          <select id="mgDiff">
+            <option value="easy">Easy</option>
+            <option value="normal" selected>Normal</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Duration (seconds)</label>
+          <input type="number" id="mgDuration" value="60" min="10" max="600">
+        </div>
+        <div class="form-group">
+          <label>Reward (Tree Coins)</label>
+          <input type="number" id="mgReward" value="100" min="0" max="10000">
+        </div>
+        <div class="form-group">
+          <label>Custom Config (JSON)</label>
+          <textarea id="mgConfig" placeholder='{"spawn_rate": 1.0, "target_score": 100}'></textarea>
+        </div>
+        <button class="btn" onclick="generate()">Generate Config</button>
+        <button class="btn" onclick="download()" style="margin-left:10px;background:var(--bg4);color:var(--green)">Download .json</button>
+      </div>
+      <div class="card">
+        <h2>Preview</h2>
+        <div class="preview" id="preview">
+          <h3>My Minigame</h3>
+          <p>Fill in the form and click Generate to see the config.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    function generate() {
+      var name = document.getElementById('mgName').value || 'My Minigame';
+      var type = document.getElementById('mgType').value;
+      var diff = document.getElementById('mgDiff').value;
+      var dur = parseInt(document.getElementById('mgDuration').value) || 60;
+      var reward = parseInt(document.getElementById('mgReward').value) || 100;
+      var custom = {};
+      try { custom = JSON.parse(document.getElementById('mgConfig').value || '{}'); } catch(e) { custom = {}; }
+      var config = {
+        name: name,
+        type: type,
+        difficulty: diff,
+        duration: dur,
+        reward_coins: reward,
+        version: '1.0',
+        config: custom
+      };
+      window._lastConfig = config;
+      document.getElementById('preview').innerHTML = '<h3>' + name + '</h3><pre>' + JSON.stringify(config, null, 2) + '</pre>';
+      PTToast('Config generated!');
+    }
+    function download() {
+      if (!window._lastConfig) generate();
+      var blob = new Blob([JSON.stringify(window._lastConfig, null, 2)], {type: 'application/json'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = (window._lastConfig.name || 'minigame').replace(/\s+/g, '_') + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      PTToast('Downloaded!');
+    }
+    generate();
+  </script>
+  <script src="script.js"></script>
+  <script src="shared.js"></script>
+</body>
+</html>

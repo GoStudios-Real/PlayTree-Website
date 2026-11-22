@@ -26,7 +26,9 @@ window.PLAYTREE_STRIPE_LINKS = {
   'coins_12000':  '',  // Coin Vault - 12,000 TC - $19.99
 };
 
-// Initialize Stripe.js if publishable key is set
+// Backend URL for real Stripe payments (run stripe_backend.py)
+// Set via: <meta name="stripe-backend" content="https://your-backend.com">
+window.PLAYTREE_BACKEND_URL = (document.querySelector('meta[name="stripe-backend"]') || {}).content || 'http://localhost:5000';
 if (window.PLAYTREE_STRIPE_PK && window.Stripe) {
   window.stripe = window.Stripe(window.PLAYTREE_STRIPE_PK);
 }
