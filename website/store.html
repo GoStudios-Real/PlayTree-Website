@@ -33,7 +33,7 @@
   <div id="particles-bg"></div>
   <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
     <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
-    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a> <button class="btn-outline btn-small" data-login-btn>Sign In</button></div>
   </nav>
   <main class="wrap">
     <div class="card">
@@ -114,16 +114,17 @@
       tp += amt;
       localStorage.setItem('tree_points', tp);
       updateBal();
-      alert('Purchased ' + amt + ' Tree Points for $' + price + ' (Demo)');
+      PTToast('Purchased ' + amt + ' Tree Points for $' + price + ' (Demo)');
     }
     function buyCoins(amt, price) {
       tc += amt;
       localStorage.setItem('tree_coins', tc);
       updateBal();
-      alert('Purchased ' + amt + ' Tree Coins for $' + price + ' (Demo)');
+      PTToast('Purchased ' + amt + ' Tree Coins for $' + price + ' (Demo)');
     }
     updateBal();
   </script>
   <script src="script.js"></script>
+  <script src="shared.js"></script>
 </body>
 </html>

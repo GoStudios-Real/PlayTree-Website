@@ -11,10 +11,12 @@ const ASSETS = [
   'store.html',
   'servers.html',
   'minigames.html',
+  'tv.html',
   'robots.txt',
   'downloads/index.html',
   'styles.css',
   'script.js',
+  'shared.js',
   'manifest.json',
   'icon192.png',
   'icon512.png'

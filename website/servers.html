@@ -33,13 +33,13 @@
   <div id="particles-bg"></div>
   <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
     <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
-    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a> <button class="btn-outline btn-small" data-login-btn>Sign In</button></div>
   </nav>
   <main class="wrap">
     <div class="card">
       <h1>Servers</h1>
       <p>Browse and join multiplayer servers. Host your own or join an existing one.</p>
-      <button class="btn-host" onclick="alert('Host server (demo)')">+ Host New Server</button>
+      <button class="btn-host" onclick="PTToast('Host server (demo)')">+ Host New Server</button>
     </div>
     <div class="card">
       <h2>Available Servers</h2>
@@ -63,10 +63,11 @@
           <div class="server-detail">${s.detail}</div>
         </div>
         <div class="server-players">${s.players}</div>
-        <button class="btn-join" ${s.online ? '' : 'disabled'} onclick="alert('Joining ${s.name} (demo)')">Join</button>
+        <button class="btn-join" ${s.online ? '' : 'disabled'} onclick="PTToast('Joining ${s.name} (demo)')">Join</button>
       </div>
     `).join('');
   </script>
   <script src="script.js"></script>
+  <script src="shared.js"></script>
 </body>
 </html>

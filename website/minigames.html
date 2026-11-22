@@ -29,7 +29,7 @@
   <div id="particles-bg"></div>
   <nav id="navbar" style="position:fixed;top:0;left:0;right:0">
     <div class="nav-left"><a href="index.html" class="logo" style="text-decoration:none">PLAYTREE</a></div>
-    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a></div>
+    <div class="nav-right"><a href="index.html" class="btn-outline btn-small">Back</a> <button class="btn-outline btn-small" data-login-btn>Sign In</button></div>
   </nav>
   <main class="wrap">
     <div class="card">
@@ -41,44 +41,46 @@
         <div class="mg-icon">🎣</div>
         <div class="mg-name">Fishing</div>
         <div class="mg-desc">Catch rare fish for gold and XP. Relaxing and rewarding.</div>
-        <button class="btn-play" onclick="alert('Launching Fishing minigame (demo)')">Play</button>
+        <button class="btn-play" onclick="playGame('Fishing')">Play</button>
         <button class="btn-install" onclick="installMinigame('fishing')">Install as App</button>
       </div>
       <div class="mg-card">
         <div class="mg-icon">⚔️</div>
         <div class="mg-name">Combat Arena</div>
         <div class="mg-desc">Fight waves of enemies. Test your skills and climb the leaderboard.</div>
-        <button class="btn-play" onclick="alert('Launching Combat Arena (demo)')">Play</button>
+        <button class="btn-play" onclick="playGame('Combat Arena')">Play</button>
         <button class="btn-install" onclick="installMinigame('arena')">Install as App</button>
       </div>
       <div class="mg-card">
         <div class="mg-icon">🧩</div>
         <div class="mg-name">Puzzle Quest</div>
         <div class="mg-desc">Match-3 puzzle game with RPG elements. Solve to progress.</div>
-        <button class="btn-play" onclick="alert('Launching Puzzle Quest (demo)')">Play</button>
+        <button class="btn-play" onclick="playGame('Puzzle Quest')">Play</button>
         <button class="btn-install" onclick="installMinigame('puzzle')">Install as App</button>
       </div>
       <div class="mg-card">
         <div class="mg-icon">🏃</div>
         <div class="mg-name">Endless Runner</div>
         <div class="mg-desc">Run, jump, and dodge obstacles. How far can you go?</div>
-        <button class="btn-play" onclick="alert('Launching Endless Runner (demo)')">Play</button>
+        <button class="btn-play" onclick="playGame('Endless Runner')">Play</button>
         <button class="btn-install" onclick="installMinigame('runner')">Install as App</button>
       </div>
     </div>
   </main>
+  <script src="script.js"></script>
+  <script src="shared.js"></script>
   <script>
     let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; window.deferredPrompt = e; });
+    function playGame(name) { PTToast('Launching ' + name + ' (demo)'); }
     function installMinigame(name) {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; window.deferredPrompt = null; });
       } else {
-        alert('Install prompt not available. Add to home screen manually or visit on a supported browser.');
+        PTToast('Install "' + name + '" via browser menu → Add to Home Screen.');
       }
     }
   </script>
-  <script src="script.js"></script>
 </body>
 </html>
