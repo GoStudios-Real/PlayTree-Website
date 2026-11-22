@@ -36,6 +36,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+<<<<<<< HEAD
   <url>
     <loc>https://playtree.game/privacy.html</loc>
     <lastmod>2026-06-12</lastmod>
@@ -59,5 +60,25 @@
     <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+=======
+>>>>>>> 2cd8eb5 (Update PLAYTREE: rebrand, website, PWA, Xbox/Store prep, docs)
+  <url>
+    <loc>https://playtree.game/store.html</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://playtree.game/servers.html</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://playtree.game/minigames.html</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

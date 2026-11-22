@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Cookie consent
 (function() {
   const consent = localStorage.getItem('cookie_consent');
@@ -19,6 +20,8 @@
   localStorage.setItem('playtree_web_version', CURRENT_VERSION);
 })();
 
+=======
+>>>>>>> 2cd8eb5 (Update PLAYTREE: rebrand, website, PWA, Xbox/Store prep, docs)
 // PWA install prompt
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -277,6 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTrailer();
   initSfx();
 
+<<<<<<< HEAD
   const menuButton = document.getElementById('menu-button');
   const navLinks = document.getElementById('nav-links');
   if (menuButton && navLinks) {
@@ -290,6 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
 
+=======
+>>>>>>> 2cd8eb5 (Update PLAYTREE: rebrand, website, PWA, Xbox/Store prep, docs)
   const installBtn = document.getElementById('install-btn');
   if (installBtn) installBtn.addEventListener('click', async () => {
     if (!deferredPrompt) return;
