@@ -1,3 +1,24 @@
+// Cookie consent
+(function() {
+  const consent = localStorage.getItem('cookie_consent');
+  const banner = document.getElementById('cookie-banner');
+  if (!consent && banner) banner.classList.remove('hidden');
+  const accept = document.getElementById('cookie-accept');
+  const decline = document.getElementById('cookie-decline');
+  if (accept) accept.addEventListener('click', () => { localStorage.setItem('cookie_consent','accepted'); if (banner) banner.classList.add('hidden'); });
+  if (decline) decline.addEventListener('click', () => { localStorage.setItem('cookie_consent','declined'); if (banner) banner.classList.add('hidden'); });
+})();
+
+// Auto-update check (website version)
+(function() {
+  const CURRENT_VERSION = '1.0.1';
+  const stored = localStorage.getItem('playtree_web_version');
+  if (stored && stored !== CURRENT_VERSION) {
+    console.log('PLAYTREE website updated to v' + CURRENT_VERSION);
+  }
+  localStorage.setItem('playtree_web_version', CURRENT_VERSION);
+})();
+
 // PWA install prompt
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {

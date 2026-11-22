@@ -37,6 +37,7 @@
   </script>
 </head>
 <body>
+  <a href="#top" class="skip-link">Skip to main content</a>
   <!--
   THESIS: PLAYTREE is presented as a field chapter: a living forest dossier, not a category-standard hero.
   OWN-WORLD: Near-black green surfaces, vivid PlayTree green, gold ritual marks, black pixel notation, and a large green orb motif.
@@ -64,7 +65,7 @@
     </div>
   </nav>
 
-  <main id="top">
+  <main id="top" role="main">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="chapter-mark">Chapter 0 / Season 0</p>
@@ -210,7 +211,7 @@
       <img src="assets/icon32.png" alt="" width="32" height="32">
       <span>PLAYTREE</span>
     </a>
-    <p>GoConsole Game Studios / GoStudios · 2026</p>
+    <p>GoConsole Game Studios / GoStudios · 2026 · <a href="privacy.html" style="color:var(--green)">Privacy</a> · <a href="tos.html" style="color:var(--green)">Terms</a></p>
     <div>
       <a href="privacy.html">Privacy</a>
       <a href="https://playtree.game">playtree.game</a>
@@ -272,6 +273,11 @@
     <span>Install PLAYTREE as an app</span>
     <button id="install-btn" class="button button-primary" type="button">Install</button>
     <button id="install-dismiss" class="button button-quiet" type="button">Dismiss</button>
+  </div>
+  <div id="cookie-banner" class="cookie-banner hidden">
+    <span>This site uses cookies for analytics and to improve your experience.</span>
+    <button id="cookie-accept" class="button button-primary" type="button">Accept</button>
+    <button id="cookie-decline" class="button button-quiet" type="button">Decline</button>
   </div>
 
   <script src="script.js"></script>
