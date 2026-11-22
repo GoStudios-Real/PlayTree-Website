@@ -43,7 +43,7 @@
         <div class="bal-item"><span class="bal-val" id="tpBal">0</span><span class="bal-label">Tree Points</span></div>
         <div class="bal-item"><span class="bal-val" id="tcBal">0</span><span class="bal-label">Tree Coins</span></div>
       </div>
-      <div class="notice">⚠ Payments are processed securely via Stripe. Prices in USD. This is a demo — no real charges will be made. Stripe keys must be kept server-side only (see .env.example).</div>
+      <div class="notice">Payments are processed securely via Stripe. Prices in USD. Configure your Stripe Payment Links in <code>store-config.js</code>.</div>
     </div>
 
     <div class="card">
@@ -109,21 +109,20 @@
       document.getElementById('tpBal').textContent = tp.toLocaleString();
       document.getElementById('tcBal').textContent = tc.toLocaleString();
     }
-    function buyPoints(amt, price) {
-      // Stripe checkout would go here (server-side)
-      tp += amt;
-      localStorage.setItem('tree_points', tp);
+    const STRIPE_LINKS = (window.PLAYTREE_STRIPE_LINKS || {});
+    function startCheckout(linkKey, amt, isPoints, price) {
+      var link = STRIPE_LINKS[linkKey];
+      if (link) { window.location.href = link; return; }
+      if (isPoints) { tp += amt; localStorage.setItem('tree_points', tp); }
+      else { tc += amt; localStorage.setItem('tree_coins', tc); }
       updateBal();
-      PTToast('Purchased ' + amt + ' Tree Points for $' + price + ' (Demo)');
+      PTToast('Purchased ' + amt + ' ' + (isPoints ? 'Tree Points' : 'Tree Coins') + ' for $' + price + ' (Demo - set Stripe link in store-config.js)');
     }
-    function buyCoins(amt, price) {
-      tc += amt;
-      localStorage.setItem('tree_coins', tc);
-      updateBal();
-      PTToast('Purchased ' + amt + ' Tree Coins for $' + price + ' (Demo)');
-    }
+    function buyPoints(amt, price) { startCheckout('points_' + amt, amt, true, price); }
+    function buyCoins(amt, price) { startCheckout('coins_' + amt, amt, false, price); }
     updateBal();
   </script>
+  <script src="store-config.js"></script>
   <script src="script.js"></script>
   <script src="shared.js"></script>
 </body>

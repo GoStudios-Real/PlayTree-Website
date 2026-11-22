@@ -15,7 +15,7 @@ class MainMenu:
         self.islands = self._create_islands()
         self.selected = 0
         self.hovered = -1
-        self.menu_items = ["New Game", "Continue", "Locker", "Store", "Daily Rewards", "Leaderboards", "Update Log", "Settings", "Quit"]
+        self.menu_items = ["New Game", "Continue", "Locker", "Store", "Daily Rewards", "Leaderboards", "Update Log", "Community", "Settings", "Quit"]
         self.has_save = has_save
         self.transition_alpha = 0
         self.transitioning = False
@@ -87,6 +87,8 @@ class MainMenu:
             return "leaderboards"
         elif item == "Update Log":
             return "update_log"
+        elif item == "Community":
+            return "community"
         elif item == "Settings":
             return "settings"
         elif item == "Quit":

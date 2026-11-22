@@ -44,6 +44,7 @@ def build():
         "--hidden-import", "src.currency",
         "--hidden-import", "src.gosd",
         "--hidden-import", "src.gosd_console",
+        "--hidden-import", "src.community_hub",
         "--hidden-import", "src.touch_controls",
         "--hidden-import", "src.account",
         "--noconfirm",

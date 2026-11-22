@@ -466,3 +466,9 @@ class GameState(Enum):
     END_CREDITS = 13
     LOGIN = 14
     LOBBY = 15
+    COMMUNITY_HUB = 16
+    REDEEM = 17
+    PROFILE = 18
+    STORE = 19
+    SERVERS = 20
+    MINIGAMES = 21

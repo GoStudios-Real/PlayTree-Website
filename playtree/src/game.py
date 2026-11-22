@@ -40,6 +40,7 @@ from src.new_game_plus import NewGamePlus
 from src.pet_system import PetManager
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
+from src.community_hub import CommunityHub
 
 class Game:
     def __init__(self, screen):
@@ -62,6 +63,7 @@ class Game:
         self.account = GoStudiosAccount()
         self.currency = CurrencySystem()
         self.gosd_console = GoSDConsole()
+        self.community_hub = CommunityHub(self)
 
         _is_mobile = sys.platform in ("android", "ios") or hasattr(sys, "getandroidapilevel")
         if _is_mobile:
@@ -556,6 +558,11 @@ class Game:
             if self.gosd_console.handle_event(event):
                 continue
 
+            # Community Hub
+            if self.community_hub.open:
+                if self.community_hub.handle_event(event):
+                    continue
+
             if self.state == GameState.LOGIN:
                 result = self.account.handle_event(event)
                 if result == "logged_in":
@@ -611,6 +618,9 @@ class Game:
                     self.leaderboards_open = True
                 elif result == "update_log":
                     self.update_log_open = True
+                elif result == "community":
+                    self.community_hub.open = True
+                    self.community_hub.screen = "hub"
                 elif result == "quit":
                     self.running = False
 
@@ -1812,6 +1822,7 @@ class Game:
 
         # GoSD scripting console overlays everything
         self.gosd_console.draw(self.screen)
+        self.community_hub.draw(self.screen)
 
     def _draw_character_create(self):
         GlowEffect.gradient_rect(self.screen, (5, 5, 30), (20, 30, 50), (0, 0, WIDTH, HEIGHT))
