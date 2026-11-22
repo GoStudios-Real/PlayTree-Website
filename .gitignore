@@ -20,6 +20,8 @@ playtree/bin/
 playtree/.buildozer/
 website/downloads/*.exe
 website/downloads/*.apk
+playtree/android_tv/.gradle/
+playtree/android_tv/app/build/
 
 # Gradle (downloaded tool, not part of repo)
 gradle-8.5/

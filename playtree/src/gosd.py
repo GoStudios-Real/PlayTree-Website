@@ -9,7 +9,7 @@ class Tok:
         self.kind = kind; self.val = val; self.line = line; self.col = col
     def __repr__(self): return f"{self.kind}:{self.val!r}@{self.line}"
 
-KEYWORDS = {'let','const','fn','if','else','while','for','in','return','true','false','null','break','continue'}
+KEYWORDS = {'let','const','fn','if','else','while','for','in','return','true','false','null','break','continue','print'}
 
 def tokenize(src):
     toks = []
@@ -268,13 +268,12 @@ class Compiler:
                 self.compile(node[2])
             else:
                 self.emit('PUSH_NULL')
-            self.emit('STORE', self.name_index(node[1]))
+            self.emit('STORE_LOCAL', self.name_index(node[1]))
             if node[3]:
                 self.emit('MARK_CONST', self.name_index(node[1]))
             return
         if k == 'fn':
             sub = Compiler()
-            sub.emit('ENTER_SCOPE')
             for p in node[2]:
                 sub.emit('PARAM', p)
             sub.compile(node[3])
@@ -492,6 +491,9 @@ class VM:
                 else: self.stack.append(v)
             elif op == 'LOAD': self.stack.append(self._get(self.names[arg]))
             elif op == 'STORE': self._set(self.names[arg], self.stack.pop())
+            elif op == 'STORE_LOCAL': self.envs[-1][self.names[arg]] = self.stack.pop()
+            elif op == 'MARK_CONST': pass
+            elif op == 'PARAM': pass
             elif op == 'MAKE_FUNC':
                 co = self.consts[arg]; self.stack.append(('func', co[1], self.envs[-1]))
             elif op == 'ENTER_SCOPE': self.envs.append({})
@@ -503,8 +505,9 @@ class VM:
                 if isinstance(callee, tuple) and callee[0]=='func':
                     _, codeobj, closure = callee
                     ccode, cconsts, cnames, params = codeobj
-                    self.call_stack.append((self.code,self.consts,self.names,self.ip))
+                    self.call_stack.append((self.code,self.consts,self.names,self.ip,self.stack))
                     self.code, self.consts, self.names, self.ip = ccode, cconsts, cnames, 0
+                    self.stack = []
                     new_env = dict(closure)
                     for p,a in zip(params,args): new_env[p]=a
                     self.envs.append(new_env)
@@ -516,8 +519,12 @@ class VM:
                 val = self.stack.pop() if self.stack else None
                 if len(self.envs)>1: self.envs.pop()
                 if self.call_stack:
-                    self.code,self.consts,self.names,self.ip = self.call_stack.pop()
-                self.stack.append(val)
+                    saved = self.call_stack.pop()
+                    self.code,self.consts,self.names,self.ip = saved[0], saved[1], saved[2], saved[3]
+                    saved[4].append(val)
+                    self.stack = saved[4]
+                else:
+                    self.stack.append(val)
             elif op == 'PRINT': self.output(str(self.stack.pop()))
             elif op == 'HALT': break
             else: raise RuntimeError(f"Unknown op {op}")
@@ -535,7 +542,7 @@ class VM:
     def _set(self, name, val):
         for env in reversed(self.envs):
             if name in env: env[name]=val; return
-        self.envs[0][name]=val
+        self.envs[-1][name]=val
 
 def compile_source(src):
     toks = tokenize(src)
