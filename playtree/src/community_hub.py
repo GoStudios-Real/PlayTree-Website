@@ -22,9 +22,9 @@ class CommunityHub:
 
     def _build_hub_buttons(self):
         cx = WIDTH // 2
-        start_y = 120
-        gap = 52
-        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Real Money Store (Stripe)", "Servers", "Minigames", "Play on TV", "Follow on X", "Join Discord", "Back"]
+        start_y = 100
+        gap = 46
+        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Real Money Store (Stripe)", "Servers", "Minigames", "Play on TV", "Voice & Chat", "Follow on X", "Join Discord", "Back"]
         self.hub_buttons = []
         for i, lbl in enumerate(labels):
             r = pygame.Rect(cx - 200, start_y + i * gap, 400, 50)
@@ -86,6 +86,10 @@ class CommunityHub:
                             self.screen = "minigames"
                         elif lbl == "Play on TV":
                             self.screen = "tv"
+                        elif lbl == "Voice & Chat":
+                            import webbrowser
+                            webbrowser.open("https://gostudios-real.github.io/PlayTree-Website/voice.html")
+                            self.message = "Opening PLAYTREE Voice & Chat"
                         elif lbl == "Follow on X":
                             import webbrowser
                             webbrowser.open("https://x.com/PlayTreeReal")

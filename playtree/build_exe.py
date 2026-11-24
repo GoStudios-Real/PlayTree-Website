@@ -47,6 +47,10 @@ def build():
         "--hidden-import", "src.community_hub",
         "--hidden-import", "src.touch_controls",
         "--hidden-import", "src.account",
+        "--hidden-import", "src.voice_chat",
+        "--hidden-import", "src.juice",
+        "--hidden-import", "sounddevice",
+        "--hidden-import", "numpy",
         "--noconfirm",
         "main.py"
     ]

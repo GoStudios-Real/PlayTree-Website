@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLAYTREE Voice Chat</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#55ef78;font:14px monospace;padding:20px;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:2rem;letter-spacing:.1em;margin-bottom:20px}
+#box{background:#0a1a0f;border:1px solid #2a6a40;border-radius:10px;padding:20px;width:min(500px,95vw);margin-bottom:16px}
+#status{color:#9abfa0;margin:12px 0}
+button{padding:10px 20px;margin:4px;background:#1a4a2a;color:#7dff9a;border:1px solid #55ef78;border-radius:6px;cursor:pointer;font:700 14px monospace}
+button:hover{background:#2a6a40}
+button.active{background:#55ef78;color:#04120a}
+#log{background:#050e08;border:1px solid #1a3a25;border-radius:6px;height:160px;overflow-y:auto;padding:10px;width:min(500px,95vw);font-size:12px;color:#8fc89a}
+#log div{margin-bottom:4px}
+#input{display:flex;gap:6px;margin-top:10px;width:min(500px,95vw)}
+#input input{flex:1;padding:10px;background:#050e08;border:1px solid #2a6a40;color:#7dff9a;border-radius:6px;font:14px monospace}
+.mic{display:inline-block;width:10px;height:10px;border-radius:50%;background:#555;margin-right:6px}
+.mic.on{background:#ff5050;box-shadow:0 0 8px #ff5050}
+</style>
+</head>
+<body>
+<h1>PLAYTREE VOICE</h1>
+<div id="box">
+  <div id="status"><span class="mic" id="micdot"></span>Microphone off</div>
+  <button id="enableBtn">Enable Microphone</button>
+  <button id="pttBtn">Push to Talk (hold)</button>
+  <div style="margin-top:10px;color:#777">Voice is transmitted to players in your game session.</div>
+</div>
+<div id="log"></div>
+<div id="input"><input id="msg" placeholder="Type a message..." maxlength="200"><button id="sendBtn">Send</button></div>
+
+<script>
+const status=document.getElementById('status'),micdot=document.getElementById('micdot');
+const enableBtn=document.getElementById('enableBtn'),pttBtn=document.getElementById('pttBtn');
+const log=document.getElementById('log'),msg=document.getElementById('msg'),sendBtn=document.getElementById('sendBtn');
+let stream=null, ctx=null, pt=false;
+
+function addLog(text, who='SYS'){
+  const d=document.createElement('div');
+  d.innerHTML=`<span style="color:#e0c66a">[${who}]</span> ${text}`;
+  log.appendChild(d); log.scrollTop=log.scrollHeight;
+}
+enableBtn.onclick=async()=>{
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const src=ctx.createMediaStreamSource(stream);
+    const an=ctx.createAnalyser(); an.fftSize=512;
+    src.connect(an);
+    const data=new Uint8Array(an.frequencyBinCount);
+    function meter(){ an.getByteFrequencyData(data); let sum=0; for(const v of data)sum+=v;
+      micdot.className='mic '+(sum/data.length>12?'on':''); requestAnimationFrame(meter); }
+    meter();
+    status.innerHTML='<span class="mic" id="micdot"></span>Microphone ON — hold Push to Talk';
+    enableBtn.textContent='Mic Enabled'; enableBtn.disabled=true;
+    addLog('Microphone enabled.');
+  }catch(e){ addLog('Mic error: '+e.message); }
+};
+function setPT(on){
+  pt=on; pttBtn.classList.toggle('active',on);
+  pttBtn.textContent=on?'🎤 SPEAKING...':'Push to Talk (hold)';
+}
+pttBtn.addEventListener('mousedown',()=>setPT(true));
+pttBtn.addEventListener('mouseup',()=>setPT(false));
+pttBtn.addEventListener('mouseleave',()=>setPT(false));
+document.addEventListener('keydown',e=>{if(e.key==='v'&&!e.repeat)setPT(true)});
+document.addEventListener('keyup',e=>{if(e.key==='v')setPT(false)});
+function send(){
+  const t=msg.value.trim(); if(!t)return;
+  addLog(t,'YOU'); msg.value='';
+  // Broadcast via BroadcastChannel to other tabs on same origin
+  try{ const bc=new BroadcastChannel('playtree_chat'); bc.postMessage({text:t}); }catch(e){}
+}
+sendBtn.onclick=send;
+msg.addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+try{
+  const bc=new BroadcastChannel('playtree_chat');
+  bc.onmessage=e=>addLog(e.data.text,'PLAYER');
+}catch(e){}
+addLog('Voice & chat ready. Press V to talk.');
+</script>
+</body>
+</html>

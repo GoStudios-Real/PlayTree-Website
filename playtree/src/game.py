@@ -40,6 +40,7 @@ from src.new_game_plus import NewGamePlus
 from src.pet_system import PetManager
 from src.npcs import NPC, DialogueBox
 from src.juice import Juice
+from src.voice_chat import VoiceChat
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
 from src.community_hub import CommunityHub
@@ -86,6 +87,7 @@ class Game:
         ]
         self.dialogue = DialogueBox()
         self.juice = Juice()
+        self.voice = VoiceChat()
         self.season = SeasonSystem()
         self.day_night = DayNightCycle()
         self.storm = StormSystem()
@@ -845,6 +847,21 @@ class Game:
                 self.achievements_open = not self.achievements_open
                 if self.achievements_open and hasattr(self, 'achievements') and self.achievements:
                     self.achievements.save()
+            elif event.key == pygame.K_v:
+                # Voice push-to-talk
+                self.voice.set_ptt(True)
+                if not self.voice.enabled:
+                    if self.voice.available:
+                        self.voice.enabled = self.voice.start()
+                        self.show_message("Voice chat ON — hold V to speak", 2)
+                    else:
+                        self.show_message("Voice unavailable (pip install sounddevice)", 2)
+            elif event.key == pygame.K_k:
+                # Toggle voice chat on/off
+                self.voice.enabled = not self.voice.enabled
+                if self.voice.enabled and not self.voice.running:
+                    self.voice.start()
+                self.show_message("Voice chat " + ("ON" if self.voice.enabled else "OFF"), 2)
             elif event.key == pygame.K_t:
                 if self.multiplayer.connected:
                     self.multiplayer.typing_chat = True
@@ -932,6 +949,8 @@ class Game:
                 self.audio.play("menu_hover")
 
         if event.type == pygame.KEYUP:
+            if event.key == pygame.K_v:
+                self.voice.set_ptt(False)
             if event.key == pygame.K_r and self.mount:
                 self.mount.sprint(False)
 
@@ -986,6 +1005,11 @@ class Game:
                     self.shop_open = not self.shop_open
             elif event.button == 4:  # LB - locker
                 self.locker_open = not self.locker_open
+
+    def _voice_capture_loop(self):
+        """Continuously capture and send mic frames while PTT held."""
+        while self.voice.ptt and self.voice.running:
+            self.voice.capture_and_send()
 
     def _try_interact(self):
         # Dialogue first (advance/close active conversation)
@@ -1335,6 +1359,12 @@ class Game:
         self.time += dt
         self.dialogue.update(dt)
         self.juice.update(dt)
+        # Voice mic capture in background thread
+        if self.voice.enabled and self.voice.running and self.voice.ptt:
+            if not hasattr(self, '_voice_thread') or not self._voice_thread.is_alive():
+                import threading
+                self._voice_thread = threading.Thread(target=self._voice_capture_loop, daemon=True)
+                self._voice_thread.start()
         for npc in self.npcs:
             npc.update(dt)
         keys = pygame.key.get_pressed()
@@ -2167,6 +2197,17 @@ class Game:
             self.hud.draw(self.screen, self.particles)
             self.dialogue.draw(self.screen)
             self.juice.draw(self.screen)
+            # Voice chat indicator
+            vf = pygame.font.Font(None, 16)
+            if self.voice.running:
+                vtxt = "🎤 VOICE ON — hold V to talk" if not self.voice.ptt else "🎤 SPEAKING..."
+                vcol = (255, 100, 100) if self.voice.ptt else (150, 200, 160)
+                vs = vf.render(vtxt, True, vcol)
+                self.screen.blit(vs, (WIDTH // 2 - vs.get_width() // 2, 100))
+                spk = self.voice.speaking_now()
+                if spk:
+                    ss = vf.render(f"🔊 Player {spk[0]} speaking", True, GOLD)
+                    self.screen.blit(ss, (WIDTH // 2 - ss.get_width() // 2, 120))
             self._draw_minimap_quest_markers()
             self._draw_mount_hud()
             if self.controller_connected:
