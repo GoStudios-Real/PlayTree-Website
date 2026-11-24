@@ -6,60 +6,58 @@
   <title>PLAYTREE - Play in Browser</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    body{padding-top:0;background:#000;overflow:hidden}
-    #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
-    #loader{position:fixed;inset:0;z-index:30;background:radial-gradient(ellipse at 50% 40%,#0a1f0f,#000 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
-    #loader h1{color:#55ef78;font:900 clamp(3rem,9vw,7rem) monospace;letter-spacing:.1em;margin:0;text-shadow:0 0 50px rgba(85,239,120,.5)}
-    #loader .tag{color:#e0c66a;font:700 1.1rem monospace;letter-spacing:.3em;margin-top:10px}
-    #bar-wrap{width:min(460px,80vw);height:10px;background:rgba(85,239,120,.15);border-radius:6px;margin-top:36px;overflow:hidden}
-    #bar{height:100%;width:0;background:#55ef78;transition:width .3s}
-    #status{color:#9abfa0;font:.85rem monospace;margin-top:12px}
-    #play-btn{margin-top:30px;padding:14px 46px;font:700 1.1rem monospace;color:#04120a;background:#55ef78;border:none;border-radius:10px;cursor:pointer;display:none;box-shadow:0 0 30px rgba(85,239,120,.4)}
-    #play-btn:hover{background:#7dff9a}
-    #frame{position:fixed;inset:0;width:100%;height:100%;border:0;display:none}
+    body{padding-top:0;background:#000;overflow:hidden;margin:0}
     #topbar{position:fixed;top:0;left:0;right:0;height:46px;z-index:40;background:rgba(4,18,10,.9);display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#55ef78;font:700 .9rem monospace}
     #topbar a{color:#e0c66a;text-decoration:none}
+    #loader{position:fixed;inset:0;z-index:30;background:radial-gradient(ellipse at 70% 35%,#1a5a30,#06120a 70%);display:flex;align-items:flex-end;justify-content:space-between;padding:0 5vw 6vh;transition:opacity .6s}
+    #logo{position:absolute;left:5vw;bottom:26vh;font:900 clamp(5rem,12vw,10rem)/.82 monospace;color:#55ef78;letter-spacing:-.04em;text-shadow:0 0 40px rgba(85,239,120,.3)}
+    #welcome{position:relative;z-index:2;max-width:460px;margin-bottom:120px}
+    #welcome h2{color:#e0c66a;font:700 1.1rem monospace;margin:0 0 8px}
+    #welcome p{color:#c8dcc8;font:.85rem monospace;margin:2px 0}
+    #bar-wrap{width:min(500px,70vw);height:9px;background:rgba(255,255,255,.15);border-radius:5px;margin-top:22px;overflow:hidden;position:relative;z-index:2}
+    #bar{height:100%;width:0;background:#ff6eb4;transition:width .3s}
+    #status{color:#ccc;font:.8rem monospace;margin-top:8px;position:relative;z-index:2}
+    #play-btn{position:absolute;right:5vw;bottom:14vh;padding:14px 44px;font:700 1.1rem monospace;color:#04120a;background:#55ef78;border:none;border-radius:8px;cursor:pointer;display:none;z-index:3}
+    #play-btn:hover{background:#7dff9a}
+    #tip{position:absolute;right:5vw;bottom:5vh;text-align:right;color:#bbb;font:.75rem monospace;z-index:2}
+    #tip small{color:#777;display:block;margin-top:3px}
+    #tree{position:absolute;right:12vw;bottom:18vh;width:260px;height:260px;z-index:1}
+    #tree .canopy{position:absolute;border-radius:50%;background:#3a9e4a}
+    #tree .trunk{position:absolute;left:120px;top:150px;width:30px;height:120px;background:#3a2a18}
+    #frame{position:fixed;inset:0;width:100%;height:100%;border:0;display:none}
   </style>
 </head>
 <body>
   <div id="topbar"><span>PLAYTREE — Web Edition</span><a href="index.html">✕ Exit</a></div>
   <div id="loader">
-    <h1>PLAYTREE</h1>
-    <div class="tag">AWAKEN . REBUILD . RESTORE BALANCE</div>
+    <div id="logo">PLAY<br>TREE</div>
+    <div id="tree"><div class="trunk"></div><div class="canopy" style="left:60px;top:20px;width:140px;height:140px"></div><div class="canopy" style="left:20px;top:70px;width:100px;height:100px"></div><div class="canopy" style="left:140px;top:70px;width:100px;height:100px"></div></div>
+    <div id="welcome">
+      <h2>WELCOME TO THE FOREST</h2>
+      <p>Sunshine. Corruption. Rebirth.</p>
+      <p>The PlayTree once connected all lands.</p>
+      <p>Restore its cores. Take it back.</p>
+    </div>
     <div id="bar-wrap"><div id="bar"></div></div>
     <div id="status">Loading game engine...</div>
-    <button id="play-btn">▶ PLAY</button>
+    <button id="play-btn">▶  PLAY</button>
+    <div id="tip">TIP: Press E near villagers to hear their stories.<small>Opportunities don't always come marked on a map.</small></div>
   </div>
   <iframe id="frame" title="PLAYTREE Web Game" allow="autoplay; fullscreen"></iframe>
 
   <script>
-    const bar = document.getElementById('bar');
-    const status = document.getElementById('status');
-    const playBtn = document.getElementById('play-btn');
-    const loader = document.getElementById('loader');
-    const frame = document.getElementById('frame');
-    const steps = [
-      'Loading game engine...', 'Growing the PlayTree...', 'Loading worlds...',
-      'Summoning creatures...', 'Preparing combat...', 'Ready!'
-    ];
-    let p = 0, i = 0;
-    const timer = setInterval(() => {
-      p += 4 + Math.random()*6;
-      bar.style.width = Math.min(100,p) + '%';
-      const s = Math.min(Math.floor(p/100*steps.length), steps.length-1);
-      if (s !== i) { i = s; status.textContent = steps[s]; }
-      if (p >= 100) {
-        clearInterval(timer);
-        status.textContent = 'Ready to play';
-        playBtn.style.display = 'block';
-      }
-    }, 120);
-    playBtn.addEventListener('click', () => {
-      loader.style.opacity = '0';
-      setTimeout(() => loader.style.display='none', 600);
-      frame.style.display = 'block';
-      frame.src = 'web/index.html';
-      frame.focus();
+    const bar=document.getElementById('bar'),status=document.getElementById('status'),playBtn=document.getElementById('play-btn'),loader=document.getElementById('loader'),frame=document.getElementById('frame');
+    const steps=['Loading game engine...','Growing the PlayTree...','Loading worlds...','Summoning creatures...','Preparing combat...','Connecting to servers...','Restoring balance...','Ready!'];
+    let p=0,i=0;
+    const timer=setInterval(()=>{
+      p+=3+Math.random()*5;bar.style.width=Math.min(100,p)+'%';
+      const s=Math.min(Math.floor(p/100*steps.length),steps.length-1);
+      if(s!==i){i=s;status.textContent=steps[s];}
+      if(p>=100){clearInterval(timer);status.textContent='Ready to play';playBtn.style.display='block';}
+    },110);
+    playBtn.addEventListener('click',()=>{
+      loader.style.opacity='0';setTimeout(()=>loader.style.display='none',600);
+      frame.style.display='block';frame.src='web/index.html';frame.focus();
     });
   </script>
 </body>
