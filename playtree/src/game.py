@@ -42,6 +42,7 @@ from src.npcs import NPC, DialogueBox
 from src.juice import Juice
 from src.game_modes import get_mode, draw_map
 from src.crossover import Storm, BuildSystem, WantedSystem, MiningSystem, PickupSystem
+from src import assets as ART
 from src.voice_chat import VoiceChat
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
@@ -233,6 +234,8 @@ class Game:
         # TV mode detection
         self.tv_info = get_tv_info()
         self.tv_mode = self.tv_info.get("is_tv", False)
+        if IS_MOBILE or self.tv_mode:
+            self.touch_controls.set_enabled(True)
         if self.tv_mode:
             self.show_message(f"TV Mode: {self.tv_info.get('tv_type', 'Unknown')} detected", 3)
 
@@ -1176,6 +1179,8 @@ class Game:
                     self.combo_display_timer = 2
                     _xp = self.juice.add_combo(enemy.x, enemy.y)
                     self.player.add_xp(max(0, _xp - 25))
+                    ART.play('sfx_hit.wav', 0.4)
+                    ART.play('sfx_coin.wav', 0.3)
                     self.juice.pulse_edge((255, 215, 80), 0.5)
                 else:
                     self.damage_numbers.append({"x": enemy.x, "y": enemy.y,
@@ -2189,6 +2194,18 @@ class Game:
             self.mining.draw(self.screen, int(self.camera_x), int(self.camera_y))
             self.build_sys.draw(self.screen, int(self.camera_x), int(self.camera_y))
             self.pickups.draw(self.screen, int(self.camera_x), int(self.camera_y))
+
+        # Sprite overlays (real PNG art on top of procedural shapes)
+        if self.player:
+            pimg = ART.image(f"player_{self.player.player_class.value.lower()}.png")
+            if pimg:
+                px, py = int(self.player.x - self.camera_x) - 32, int(self.player.y - self.camera_y) - 32
+                self.screen.blit(pimg, (px, py))
+        for i, enemy in enumerate(self.enemies):
+            eimg = ART.image(f"enemy_{enemy.enemy_type % 6}.png")
+            if eimg:
+                ex, ey = int(enemy.x - self.camera_x) - 24, int(enemy.y - self.camera_y) - 24
+                self.screen.blit(eimg, (ex, ey))
 
         # Draw creatures
         for creature in self.creatures:

@@ -40,6 +40,7 @@ def build():
         "--windowed",
         "--icon", "NONE",
         "--add-data", "src;src",
+        "--add-data", "assets;assets",
         "--hidden-import", "pygame",
         "--hidden-import", "src.currency",
         "--hidden-import", "src.gosd",

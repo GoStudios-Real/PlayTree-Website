@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('src', 'src')],
+    datas=[('src', 'src'), ('assets', 'assets')],
     hiddenimports=['pygame', 'src.currency', 'src.gosd', 'src.gosd_console', 'src.community_hub', 'src.touch_controls', 'src.account', 'src.voice_chat', 'src.juice', 'sounddevice', 'numpy'],
     hookspath=[],
     hooksconfig={},
