@@ -37,8 +37,18 @@ MODES = {
         "sky": (15, 40, 50), "ground": (30, 80, 70), "accent": (120, 220, 255),
         "spawn_resource": "Ancient Seeds", "spawn_amount": 99,
     },
+    "crossover": {
+        "name": "Crossover", "icon": "X", "map": "crossover",
+        "map_name": "THE BLENDED WORLD",
+        "desc": "2D blend: storm zone, building, mining, wanted level, vehicles & supply drops!",
+        "goal": "SURVIVE THE STORM & EXPLORE",
+        "enemies": 10, "bosses": True, "rounds": False, "saving": True,
+        "pvp": False, "build": True, "tame": True, "infinite_resources": False,
+        "sky": (40, 20, 60), "ground": (50, 60, 40), "accent": (255, 120, 220),
+        "spawn_resource": "Ancient Seeds", "spawn_amount": 30,
+    },
 }
-MODE_ORDER = ["story", "online", "sandbox"]
+MODE_ORDER = ["story", "online", "sandbox", "crossover"]
 
 # Map-specific static features drawn in world space
 MAP_FEATURES = {

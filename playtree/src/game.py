@@ -41,6 +41,7 @@ from src.pet_system import PetManager
 from src.npcs import NPC, DialogueBox
 from src.juice import Juice
 from src.game_modes import get_mode, draw_map
+from src.crossover import Storm, BuildSystem, WantedSystem, MiningSystem, PickupSystem
 from src.voice_chat import VoiceChat
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
@@ -93,6 +94,13 @@ class Game:
         self.mode_data = get_mode("story")
         self.pvp_score = 0
         self.pvp_kills = 0
+        # Crossover systems
+        self.storm_sys = Storm(WORLD_W // 2, WORLD_H // 2)
+        self.build_sys = BuildSystem()
+        self.wanted = WantedSystem()
+        self.mining = MiningSystem()
+        self.pickups = PickupSystem()
+        self.crossover_active = False
         self.season = SeasonSystem()
         self.day_night = DayNightCycle()
         self.storm = StormSystem()
@@ -633,7 +641,14 @@ class Game:
                     from src.game_modes import get_mode
                     self.game_mode = self.main_menu.selected_mode
                     self.mode_data = get_mode(self.game_mode)
-                    self.show_message(f"{self.mode_data['icon']} {self.mode_data['name']}: {self.mode_data['map_name']}", 4)
+                    self.crossover_active = self.game_mode == "crossover"
+                    if self.crossover_active:
+                        self.storm_sys = Storm(self.player.x if self.player else WORLD_W//2,
+                                               self.player.y if self.player else WORLD_H//2)
+                        self.storm_sys.start()
+                        self.show_message("🌪️ CROSSOVER MODE — Storm incoming! Build, mine, survive!", 5)
+                    else:
+                        self.show_message(f"{self.mode_data['icon']} {self.mode_data['name']}: {self.mode_data['map_name']}", 4)
                     self.state = GameState.CHARACTER_CREATE
                     user_data = self.account.get_user_data()
                     self.name_input = user_data["name"] if user_data else ""
@@ -867,6 +882,21 @@ class Game:
                 self.achievements_open = not self.achievements_open
                 if self.achievements_open and hasattr(self, 'achievements') and self.achievements:
                     self.achievements.save()
+            elif event.key == pygame.K_z and self.crossover_active:
+                # Build wall (Fortnite/Minecraft)
+                if self.build_sys.place(self.player.x, self.player.y + 30, self.player):
+                    self.show_message("Built WALL!", 1)
+            elif event.key == pygame.K_x and self.crossover_active:
+                # Build ramp
+                self.build_sys.selected = "ramp"
+                if self.build_sys.place(self.player.x, self.player.y + 30, self.player):
+                    self.show_message("Built RAMP!", 1)
+                self.build_sys.selected = "wall"
+            elif event.key == pygame.K_f and self.crossover_active:
+                # Mine (Minecraft)
+                msg = self.mining.mine(self.player.x, self.player.y, self.player.facing, self.player)
+                if msg:
+                    self.show_message(msg, 1)
             elif event.key == pygame.K_v:
                 # Voice push-to-talk
                 self.voice.set_ptt(True)
@@ -1379,6 +1409,19 @@ class Game:
         self.time += dt
         self.dialogue.update(dt)
         self.juice.update(dt)
+        # Crossover systems update
+        if self.crossover_active and self.player:
+            dmg = self.storm_sys.update(dt, self.player)
+            if dmg > 0:
+                self.player.hp -= dmg
+                self.juice.flash_screen((180, 60, 200), 0.2)
+                self.show_message(f"Storm damage! -{dmg} HP", 1)
+            self.build_sys.update(dt, self.enemies)
+            self.wanted.update(dt)
+            drop = self.pickups.update(dt, self.player)
+            if drop:
+                self.show_message(f"Picked up: {drop}!", 2)
+                self.juice.popup(self.player.x, self.player.y - 40, drop, GOLD, size=26)
         # Voice mic capture in background thread
         if self.voice.enabled and self.voice.running and self.voice.ptt:
             if not hasattr(self, '_voice_thread') or not self._voice_thread.is_alive():
@@ -2142,6 +2185,10 @@ class Game:
         # Mode-specific map features
         if hasattr(self, 'game_mode'):
             draw_map(self.screen, int(self.camera_x), int(self.camera_y), self.game_mode, self.time)
+        if self.crossover_active:
+            self.mining.draw(self.screen, int(self.camera_x), int(self.camera_y))
+            self.build_sys.draw(self.screen, int(self.camera_x), int(self.camera_y))
+            self.pickups.draw(self.screen, int(self.camera_x), int(self.camera_y))
 
         # Draw creatures
         for creature in self.creatures:
@@ -2231,6 +2278,12 @@ class Game:
                 mode_txt += f"   KOs: {self.pvp_kills}"
             ms = mf.render(mode_txt, True, self.mode_data['accent'])
             self.screen.blit(ms, (WIDTH // 2 - ms.get_width() // 2, 76))
+            if self.crossover_active:
+                self.storm_sys.draw(self.screen, int(self.camera_x), int(self.camera_y))
+                self.wanted.draw(self.screen)
+                cf = pygame.font.Font(None, 16)
+                hint = cf.render("Z=Wall  X=Ramp  F=Mine  |  Supply drops fall every 20s", True, (200, 160, 220))
+                self.screen.blit(hint, (WIDTH // 2 - hint.get_width() // 2, HEIGHT - 40))
             # Voice chat indicator
             vf = pygame.font.Font(None, 16)
             if self.voice.running:
