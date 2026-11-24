@@ -22,9 +22,9 @@ class CommunityHub:
 
     def _build_hub_buttons(self):
         cx = WIDTH // 2
-        start_y = 160
-        gap = 60
-        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Servers", "Minigames", "Play on TV", "Follow on X", "Join Discord", "Back"]
+        start_y = 120
+        gap = 52
+        labels = ["Redeem Code", "Profile", "Store (Tree Points/Coins)", "Real Money Store (Stripe)", "Servers", "Minigames", "Play on TV", "Follow on X", "Join Discord", "Back"]
         self.hub_buttons = []
         for i, lbl in enumerate(labels):
             r = pygame.Rect(cx - 200, start_y + i * gap, 400, 50)
@@ -78,6 +78,8 @@ class CommunityHub:
                             self.screen = "profile"
                         elif lbl == "Store (Tree Points/Coins)":
                             self.screen = "store"
+                        elif lbl == "Real Money Store (Stripe)":
+                            self.screen = "realstore"
                         elif lbl == "Servers":
                             self.screen = "servers"
                         elif lbl == "Minigames":
@@ -101,6 +103,9 @@ class CommunityHub:
             # store buy buttons
             if self.screen == "store":
                 self._handle_store_click(pos)
+            # real store buy buttons
+            if self.screen == "realstore":
+                self._handle_realstore_click(pos)
             # servers join
             if self.screen == "servers":
                 self._handle_server_click(pos)
@@ -142,6 +147,25 @@ class CommunityHub:
                 self.message = f"Purchased {amt} {'Tree Points' if is_pts else 'Tree Coins'} (Demo)"
                 return
 
+    def _handle_realstore_click(self, pos):
+        from src import stripe_client
+        products = list(stripe_client.PRODUCTS.items())
+        for i, (key, info) in enumerate(products):
+            r = pygame.Rect(140, 150 + i * 48, 1000, 42)
+            if r.collidepoint(pos):
+                user = "guest"
+                try:
+                    ud = self.game.account.get_user_data()
+                    if ud: user = ud.get("name", "guest")
+                except Exception:
+                    pass
+                url, err = stripe_client.create_checkout(key, user)
+                if url:
+                    self.message = "Opening secure Stripe checkout..."
+                else:
+                    self.message = "Stripe error: " + str(err)[:60]
+                return
+
     def _handle_server_click(self, pos):
         self.message = "Server browser coming soon. Multiplayer via src/multiplayer.py"
 
@@ -174,6 +198,8 @@ class CommunityHub:
             self._draw_profile(screen)
         elif self.screen == "store":
             self._draw_store(screen)
+        elif self.screen == "realstore":
+            self._draw_realstore(screen)
         elif self.screen == "servers":
             self._draw_servers(screen)
         elif self.screen == "minigames":
@@ -244,6 +270,33 @@ class CommunityHub:
         if self.message:
             m = self.small.render(self.message, True, (255, 200, 100))
             screen.blit(m, m.get_rect(center=(WIDTH // 2, 380)))
+        back = pygame.Rect(40, HEIGHT - 70, 120, 40)
+        pygame.draw.rect(screen, (40, 40, 40), back, border_radius=6)
+        bt = self.small.render("Back", True, (200, 200, 200))
+        screen.blit(bt, bt.get_rect(center=back.center))
+
+    def _draw_realstore(self, screen):
+        from src import stripe_client
+        title = self.font.render("REAL MONEY STORE - SECURE STRIPE CHECKOUT", True, (80, 255, 120))
+        screen.blit(title, title.get_rect(center=(WIDTH // 2, 90)))
+        note = self.tiny.render("Real payments via Stripe. Set STRIPE_SECRET_KEY + run stripe_backend.py first.", True, (150, 180, 150))
+        screen.blit(note, note.get_rect(center=(WIDTH // 2, 118)))
+        cfg = stripe_client.configured()
+        status = self.tiny.render(("Stripe configured" if cfg else "Demo mode - configure .env to enable real payments"),
+                                  True, (255, 200, 100) if not cfg else (80, 255, 120))
+        screen.blit(status, status.get_rect(center=(WIDTH // 2, 138)))
+        products = list(stripe_client.PRODUCTS.items())
+        for i, (key, info) in enumerate(products):
+            r = pygame.Rect(140, 150 + i * 48, 1000, 42)
+            pygame.draw.rect(screen, (20, 40, 25), r, border_radius=8)
+            pygame.draw.rect(screen, (80, 255, 120), r, 1, border_radius=8)
+            label = self.small.render(f"{info['name']}", True, (200, 255, 200))
+            screen.blit(label, (r.x + 16, r.y + 10))
+            buy = self.small.render("BUY  ▶", True, (230, 200, 100))
+            screen.blit(buy, (r.right - buy.get_width() - 20, r.y + 10))
+        if self.message:
+            m = self.small.render(self.message, True, (255, 200, 100))
+            screen.blit(m, m.get_rect(center=(WIDTH // 2, HEIGHT - 110)))
         back = pygame.Rect(40, HEIGHT - 70, 120, 40)
         pygame.draw.rect(screen, (40, 40, 40), back, border_radius=6)
         bt = self.small.render("Back", True, (200, 200, 200))

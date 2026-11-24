@@ -9,10 +9,10 @@ source.include_exts = py,png,jpg,kv,atlas,txt,json
 source.include_patterns = assets/*,src/*
 
 # Version
-version = 1.0.0
+version = 1.3.0
 
-# Requirements
-requirements = python3,pygame-ce,sdl2,sdl2_image,sdl2_mixer,sdl2_ttf
+# Requirements - lighter build (drop unused SDL extras)
+requirements = python3,pygame-ce,sdl2,sdl2_image,sdl2_ttf
 
 # Android permissions
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
@@ -21,7 +21,7 @@ android.minapi = 24
 android.ndk = 25b
 android.sdk = 33
 android.accept_sdk_license = True
-android.arch = arm64-v8a
+android.archs = arm64-v8a
 
 # Back key
 android.back_key = Back

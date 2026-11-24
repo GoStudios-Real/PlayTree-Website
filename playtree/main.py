@@ -18,6 +18,7 @@ sys.path.insert(0, _base)
 
 from config import WIDTH, HEIGHT, TITLE, FPS, BLACK
 from src.game import Game
+from src.loading_screen import LoadingScreen
 
 def is_mobile():
     if sys.platform in ("android", "ios"):
@@ -91,7 +92,25 @@ def main():
 
     clock = pygame.time.Clock()
     game = Game(render_surface)
+    loading = LoadingScreen(render_surface)
+    started = False
     running = True
+
+    # --- Loading screen loop: progress then wait for PLAY ---
+    while running and not started:
+        dt = clock.tick(FPS) / 1000.0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if loading.handle_event(event):
+                if loading.ready:
+                    started = True
+        loading.update(dt)
+        loading.draw()
+        dw, dh = display.get_size()
+        scaled = pygame.transform.smoothscale(render_surface, (dw, dh)) if (dw, dh) != (WIDTH, HEIGHT) else render_surface
+        display.blit(scaled, (0, 0))
+        pygame.display.flip()
 
     while running:
         dt = clock.tick(FPS) / 1000.0

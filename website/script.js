@@ -11,7 +11,7 @@
 
 // Auto-update check (website version)
 (function() {
-  const CURRENT_VERSION = '1.3.0';
+  const CURRENT_VERSION = '1.4.0';
   const stored = localStorage.getItem('playtree_web_version');
   if (stored && stored !== CURRENT_VERSION) console.log('PLAYTREE website updated to v' + CURRENT_VERSION);
   localStorage.setItem('playtree_web_version', CURRENT_VERSION);
@@ -206,4 +206,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   const installDismiss=document.getElementById('install-dismiss');
   if(installDismiss)installDismiss.addEventListener('click',()=>{const banner=document.getElementById('install-banner');if(banner)banner.classList.add('hidden');});
 });
+
 
