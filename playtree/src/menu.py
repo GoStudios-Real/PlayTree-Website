@@ -19,6 +19,9 @@ class MainMenu:
         self.has_save = has_save
         self.menu_start_y = 350  # below the world tree canopy
         self.menu_gap = 29       # fits 11 items above footer
+        self.selected_mode = "story"
+        from src.game_modes import MODE_ORDER
+        self.mode_order = MODE_ORDER
         self.transition_alpha = 0
         self.transitioning = False
         self.transition_target = None
@@ -123,6 +126,12 @@ class MainMenu:
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
+            if event.key in (pygame.K_LEFT, pygame.K_RIGHT) and self.menu_items[self.selected] == "New Game":
+                d = 1 if event.key == pygame.K_RIGHT else -1
+                self.selected_mode = self.mode_order[(self.mode_order.index(self.selected_mode) + d) % len(self.mode_order)]
+                if self.audio:
+                    self.audio.play("menu_hover")
+                return None
             if event.key in (pygame.K_UP, pygame.K_w):
                 self.selected = (self.selected - 1) % len(self.menu_items)
                 if self.audio:
@@ -258,6 +267,15 @@ class MainMenu:
         tag = self.font_tiny.render("Awaken. Rebuild. Restore Balance.", True, (150, 200, 160))
         tag_rect = tag.get_rect(center=(WIDTH//2, title_y + 115))
         self.screen.blit(tag, tag_rect)
+
+        # Game mode selector (visible when New Game highlighted)
+        if self.menu_items[self.selected] == "New Game":
+            from src.game_modes import get_mode
+            m = get_mode(self.selected_mode)
+            mode_s = self.font_tiny.render(f"◀  {m['icon']} {m['name']}  ▶   (← / → to change)", True, m['accent'])
+            self.screen.blit(mode_s, mode_s.get_rect(center=(WIDTH//2, title_y + 148)))
+            desc = self.font_tiny.render(m['desc'][:70], True, (130, 150, 135))
+            self.screen.blit(desc, desc.get_rect(center=(WIDTH//2, title_y + 166)))
 
         menu_start_y = self.menu_start_y
         for i, item in enumerate(self.menu_items):

@@ -614,6 +614,10 @@ class Game:
                     continue
                 result = self.main_menu.handle_event(event)
                 if result == "character_create":
+                    from src.game_modes import get_mode
+                    self.game_mode = self.main_menu.selected_mode
+                    self.mode_data = get_mode(self.game_mode)
+                    self.show_message(f"{self.mode_data['icon']} {self.mode_data['name']}: {self.mode_data['map_name']}", 4)
                     self.state = GameState.CHARACTER_CREATE
                     user_data = self.account.get_user_data()
                     self.name_input = user_data["name"] if user_data else ""
@@ -1859,7 +1863,7 @@ class Game:
                 nr_f = pygame.font.Font(None, 20)
                 pulse = int(math.sin(self.time * 3) * 30 + 225)
                 nr_s = nr_f.render("Daily Reward Available! (F10)", True, (*GOLD[:3], pulse))
-                self.screen.blit(nr_s, (WIDTH - nr_s.get_width() - 20, 50))
+                self.screen.blit(nr_s, (WIDTH // 2 - nr_s.get_width() // 2, 50))
             if self.daily_rewards_open:
                 self.daily_rewards.draw(self.screen)
             if self.leaderboards_open:
@@ -2110,6 +2114,10 @@ class Game:
             return
 
         sky_color = self.day_night.get_sky_color()
+        # Apply game mode map tint
+        if hasattr(self, 'mode_data') and self.mode_data['map'] != 'forest':
+            tint = self.mode_data['sky']
+            sky_color = tuple(int((a*0.5 + b*0.5)) for a, b in zip(sky_color, tint))
         self.screen.fill(sky_color)
 
         light = self.day_night.get_light_level()
@@ -3097,7 +3105,7 @@ class Game:
     def _draw_gameplay_chat(self):
         if not self.multiplayer.connected:
             return
-        chat_x = 10
+        chat_x = WIDTH - 320
         chat_y = HEIGHT - 180
         chat_w = 300
         chat_h = 120

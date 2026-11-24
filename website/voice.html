@@ -1,86 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PLAYTREE Voice Chat</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#55ef78;font:14px monospace;padding:20px;display:flex;flex-direction:column;align-items:center;min-height:100vh}
-h1{font-size:2rem;letter-spacing:.1em;margin-bottom:20px}
-#box{background:#0a1a0f;border:1px solid #2a6a40;border-radius:10px;padding:20px;width:min(500px,95vw);margin-bottom:16px}
-#status{color:#9abfa0;margin:12px 0}
-button{padding:10px 20px;margin:4px;background:#1a4a2a;color:#7dff9a;border:1px solid #55ef78;border-radius:6px;cursor:pointer;font:700 14px monospace}
-button:hover{background:#2a6a40}
-button.active{background:#55ef78;color:#04120a}
-#log{background:#050e08;border:1px solid #1a3a25;border-radius:6px;height:160px;overflow-y:auto;padding:10px;width:min(500px,95vw);font-size:12px;color:#8fc89a}
-#log div{margin-bottom:4px}
-#input{display:flex;gap:6px;margin-top:10px;width:min(500px,95vw)}
-#input input{flex:1;padding:10px;background:#050e08;border:1px solid #2a6a40;color:#7dff9a;border-radius:6px;font:14px monospace}
-.mic{display:inline-block;width:10px;height:10px;border-radius:50%;background:#555;margin-right:6px}
-.mic.on{background:#ff5050;box-shadow:0 0 8px #ff5050}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLAYTREE Voice & Chat</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#040e08;color:#55ef78;font-family:'Segoe UI',monospace;padding-top:70px}
+    #top{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(6,20,12,.95);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:10;border-bottom:1px solid #1a4a2a}
+    #top a{color:#e0c66a;text-decoration:none}
+    .wrap{max-width:1000px;margin:0 auto;padding:24px 20px 60px}
+    h1{font-size:2rem;letter-spacing:.1em;margin:0 0 6px} h2{color:#e0c66a;font-size:1.1rem;margin:0 0 14px}
+    .card{background:#0a1a10;border:1px solid #2a6a40;border-radius:12px;padding:20px;margin-bottom:18px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input,select{padding:10px;background:#040e08;border:1px solid #2a6a40;color:#7dff9a;border-radius:6px;font:14px monospace}
+    button{padding:10px 18px;background:#1a4a2a;color:#7dff9a;border:1px solid #55ef78;border-radius:6px;cursor:pointer;font:700 14px monospace}
+    button:hover{background:#2a6a40}button.on{background:#55ef78;color:#04120a}
+    #status{color:#9abfa0;margin-top:10px}
+    #peers{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .peer{background:#0f2a18;border:1px solid #2a6a40;border-radius:8px;padding:8px 12px;font-size:.85rem}
+    .peer .mic{display:inline-block;width:9px;height:9px;border-radius:50%;background:#555;margin-right:6px}
+    .peer .mic.on{background:#ff5050;box-shadow:0 0 8px #ff5050}
+    #log{background:#030a06;border:1px solid #1a3a25;border-radius:8px;height:260px;overflow-y:auto;padding:12px;font-size:13px;color:#9ecfa8}
+    #log div{margin-bottom:5px}#log .sys{color:#777}
+    #chatRow{display:flex;gap:8px;margin-top:10px}#chatRow input{flex:1}
+    .hidden{display:none}
+  </style>
 </head>
 <body>
-<h1>PLAYTREE VOICE</h1>
-<div id="box">
-  <div id="status"><span class="mic" id="micdot"></span>Microphone off</div>
-  <button id="enableBtn">Enable Microphone</button>
-  <button id="pttBtn">Push to Talk (hold)</button>
-  <div style="margin-top:10px;color:#777">Voice is transmitted to players in your game session.</div>
-</div>
-<div id="log"></div>
-<div id="input"><input id="msg" placeholder="Type a message..." maxlength="200"><button id="sendBtn">Send</button></div>
+  <div id="top"><span>PLAYTREE — Voice & Chat</span><a href="index.html">✕ Exit</a></div>
+  <div class="wrap">
+    <h1>PLAYTREE VOICE</h1>
+    <h2>Awaken. Rebuild. Restore Balance. — talk with your party.</h2>
+
+    <div class="card">
+      <div class="row">
+        <input id="name" placeholder="Your name" value="Player" maxlength="24">
+        <input id="room" placeholder="Room (e.g. forest)" value="forest" maxlength="24">
+        <button id="joinBtn">Join Room</button>
+        <button id="leaveBtn" class="hidden">Leave</button>
+      </div>
+      <div id="status">Not connected. Enter a name + room and join.</div>
+      <div id="peers"></div>
+      <div class="row" style="margin-top:12px">
+        <button id="micBtn" class="hidden">🎤 Enable Mic</button>
+        <button id="pttBtn" class="hidden">🎙 Push to Talk (hold V)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Room Chat</h2>
+      <div id="log"></div>
+      <div id="chatRow"><input id="msg" placeholder="Type a message..." maxlength="300"><button id="sendBtn">Send</button></div>
+    </div>
+  </div>
 
 <script>
-const status=document.getElementById('status'),micdot=document.getElementById('micdot');
-const enableBtn=document.getElementById('enableBtn'),pttBtn=document.getElementById('pttBtn');
-const log=document.getElementById('log'),msg=document.getElementById('msg'),sendBtn=document.getElementById('sendBtn');
-let stream=null, ctx=null, pt=false;
+const $=id=>document.getElementById(id);
+let ws=null, localStream=null, pcs={}, myId=null, inRoom=false, ptt=false, name='Player';
+const VOICE_SERVER = (document.querySelector('meta[name="voice-server"]')||{}).content || 'wss://playtree-voice.onrender.com';
+// Fall back to local server if hosted unavailable
+const SERVERS = [VOICE_SERVER, 'ws://'+(location.hostname||'localhost')+':8000'];
 
-function addLog(text, who='SYS'){
+function log(text, who='SYS', sys=false){
   const d=document.createElement('div');
-  d.innerHTML=`<span style="color:#e0c66a">[${who}]</span> ${text}`;
-  log.appendChild(d); log.scrollTop=log.scrollHeight;
+  if(sys) d.className='sys';
+  d.innerHTML=`<b style="color:${who==='SYS'?'#777':'#e0c66a'}">[${who}]</b> ${text}`;
+  const l=$('log'); l.appendChild(d); l.scrollTop=l.scrollHeight;
 }
-enableBtn.onclick=async()=>{
+function setStatus(t){$('status').textContent=t;}
+
+function connect(){
+  name=($('name').value||'Player').trim().slice(0,24);
+  const room=($('room').value||'forest').trim().slice(0,24);
+  let idx=0;
+  function tryNext(){
+    if(idx>=SERVERS.length){setStatus('Could not connect to any voice server.');log('Voice server unavailable. Text chat still works locally.','SYS',true);startLocalChat(room);return;}
+    const url=SERVERS[idx++]+'/ws/'+encodeURIComponent(room);
+    setStatus('Connecting to '+url+' ...');
+    try{ws=new WebSocket(url)}catch(e){tryNext();return;}
+    ws.onopen=()=>{
+      inRoom=true; $('joinBtn').classList.add('hidden');$('leaveBtn').classList.remove('hidden');
+      $('micBtn').classList.remove('hidden');$('pttBtn').classList.remove('hidden');
+      setStatus('Connected to room "'+room+'" as '+name);log('Joined room '+room,'SYS',true);
+      ws.send(JSON.stringify({type:'rename',name}));
+    };
+    ws.onmessage=async e=>{
+      const d=JSON.parse(e.data);
+      if(d.type==='welcome'){
+        myId=d.id; renderPeers(d.peers);
+      } else if(d.type==='peer_joined'){ addPeer(d.peer); log(d.peer.name+' joined','SYS',true); }
+      else if(d.type==='peer_left'){ removePeer(d.id); log('A player left','SYS',true); }
+      else if(d.type==='peer_update'){ updatePeer(d.peer); }
+      else if(d.type==='chat'){ log(d.text,d.from); }
+      else if(d.type==='signal'){ await handleSignal(d.from,d.data); }
+      else if(d.type==='voice_state'){ const p=peersEl.querySelector('[data-id="'+d.from+'"] .mic'); if(p)p.className='mic '+(d.speaking?'on':''); }
+    };
+    ws.onclose=()=>{ if(inRoom){setStatus('Disconnected.');log('Disconnected from voice server','SYS',true);inRoom=false;} };
+    ws.onerror=()=>{ tryNext(); };
+  }
+  tryNext();
+}
+function startLocalChat(room){
+  inRoom=true; setStatus('Local chat mode (room '+room+')');
+  $('joinBtn').classList.add('hidden');$('leaveBtn').classList.remove('hidden');
+  try{ window._bc=new BroadcastChannel('playtree_chat_'+room); window._bc.onmessage=e=>log(e.data.text,e.data.name); }catch(e){}
+}
+const peersEl=$('peers');
+function addPeer(p){
+  if(peersEl.querySelector('[data-id="'+p.id+'"]'))return;
+  const el=document.createElement('div');el.className='peer';el.dataset.id=p.id;
+  el.innerHTML='<span class="mic"></span>'+p.name;peersEl.appendChild(el);
+}
+function updatePeer(p){const el=peersEl.querySelector('[data-id="'+p.id+'"]');if(el)el.innerHTML='<span class="mic"></span>'+p.name;}
+function removePeer(id){const el=peersEl.querySelector('[data-id="'+id+'"]');if(el)el.remove();if(pcs[id]){pcs[id].close();delete pcs[id];}}
+function renderPeers(list){peersEl.innerHTML='';list.forEach(addPeer);}
+
+async function enableMic(){
   try{
-    stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const src=ctx.createMediaStreamSource(stream);
-    const an=ctx.createAnalyser(); an.fftSize=512;
-    src.connect(an);
-    const data=new Uint8Array(an.frequencyBinCount);
-    function meter(){ an.getByteFrequencyData(data); let sum=0; for(const v of data)sum+=v;
-      micdot.className='mic '+(sum/data.length>12?'on':''); requestAnimationFrame(meter); }
-    meter();
-    status.innerHTML='<span class="mic" id="micdot"></span>Microphone ON — hold Push to Talk';
-    enableBtn.textContent='Mic Enabled'; enableBtn.disabled=true;
-    addLog('Microphone enabled.');
-  }catch(e){ addLog('Mic error: '+e.message); }
-};
+    localStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+    $('micBtn').textContent='Mic ON';$('micBtn').classList.add('on');$('pttBtn').classList.remove('hidden');
+    log('Microphone enabled','SYS',true);
+    // Call existing peers
+    for(const id of Object.keys(pcs)) await makeOffer(id);
+    // Call all peer elements
+    Array.from(peersEl.children).forEach(el=>{ if(el.dataset.id && !pcs[el.dataset.id]) makeOffer(el.dataset.id); });
+  }catch(e){log('Mic error: '+e.message,'SYS',true);}
+}
+function makePc(id){
+  const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+  if(localStream) localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
+  pc.onicecandidate=e=>{if(e.candidate&&ws)ws.send(JSON.stringify({type:'signal',to:id,data:{ice:e.candidate.toJSON()}}));};
+  pc.ontrack=e=>{
+    const audio=new Audio();audio.srcObject=new MediaStream([e.track]);audio.play().catch(()=>{});
+  };
+  pcs[id]=pc;return pc;
+}
+async function makeOffer(id){
+  if(!id||id===myId)return;
+  const pc=pcs[id]||makePc(id);
+  const offer=await pc.createOffer();await pc.setLocalDescription(offer);
+  if(ws)ws.send(JSON.stringify({type:'signal',to:id,data:{offer:offer}}));
+}
+async function handleSignal(from,data){
+  let pc=pcs[from]||makePc(from);
+  try{
+    if(data.offer){await pc.setRemoteDescription(data.offer);const a=await pc.createAnswer();await pc.setLocalDescription(a);if(ws)ws.send(JSON.stringify({type:'signal',to:from,data:{answer:a}}));}
+    else if(data.answer){await pc.setRemoteDescription(data.answer);}
+    else if(data.ice){await pc.addIceCandidate(data.ice);}
+  }catch(e){}
+}
 function setPT(on){
-  pt=on; pttBtn.classList.toggle('active',on);
-  pttBtn.textContent=on?'🎤 SPEAKING...':'Push to Talk (hold)';
+  ptt=on;$('pttBtn').classList.toggle('on',on);
+  $('pttBtn').textContent=on?'🎙 SPEAKING...':'🎙 Push to Talk (hold V)';
+  if(localStream) localStream.getAudioTracks().forEach(t=>t.enabled=on);
+  if(ws)ws.send(JSON.stringify({type:'voice_state',speaking:on}));
 }
-pttBtn.addEventListener('mousedown',()=>setPT(true));
-pttBtn.addEventListener('mouseup',()=>setPT(false));
-pttBtn.addEventListener('mouseleave',()=>setPT(false));
-document.addEventListener('keydown',e=>{if(e.key==='v'&&!e.repeat)setPT(true)});
+$('pttBtn').addEventListener('mousedown',()=>setPT(true));
+$('pttBtn').addEventListener('mouseup',()=>setPT(false));
+$('pttBtn').addEventListener('mouseleave',()=>setPT(false));
+document.addEventListener('keydown',e=>{if(e.key==='v'&&!e.repeat&&inRoom&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName))setPT(true)});
 document.addEventListener('keyup',e=>{if(e.key==='v')setPT(false)});
+
 function send(){
-  const t=msg.value.trim(); if(!t)return;
-  addLog(t,'YOU'); msg.value='';
-  // Broadcast via BroadcastChannel to other tabs on same origin
-  try{ const bc=new BroadcastChannel('playtree_chat'); bc.postMessage({text:t}); }catch(e){}
+  const t=$('msg').value.trim();if(!t)return;
+  if(ws&&ws.readyState===1)ws.send(JSON.stringify({type:'chat',text:t}));
+  else if(window._bc)window._bc.postMessage({name,text:t});
+  else log(t,name);
+  $('msg').value='';
 }
-sendBtn.onclick=send;
-msg.addEventListener('keydown',e=>{if(e.key==='Enter')send()});
-try{
-  const bc=new BroadcastChannel('playtree_chat');
-  bc.onmessage=e=>addLog(e.data.text,'PLAYER');
-}catch(e){}
-addLog('Voice & chat ready. Press V to talk.');
+$('sendBtn').onclick=send;
+$('msg').addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+$('joinBtn').onclick=connect;
+$('leaveBtn').onclick=()=>{if(ws)ws.close();if(localStream)localStream.getTracks().forEach(t=>t.stop());Object.values(pcs).forEach(p=>p.close());pcs={};inRoom=false;peersEl.innerHTML='';$('leaveBtn').classList.add('hidden');$('joinBtn').classList.remove('hidden');$('micBtn').classList.add('hidden');$('pttBtn').classList.add('hidden');setStatus('Left room.');};
+$('micBtn').onclick=enableMic;
+log('Welcome to PLAYTREE Voice. Enter a name and room, then Join.','SYS',true);
 </script>
 </body>
 </html>
