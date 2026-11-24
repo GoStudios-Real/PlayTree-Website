@@ -39,6 +39,7 @@ from src.screenshot import ScreenshotSystem
 from src.new_game_plus import NewGamePlus
 from src.pet_system import PetManager
 from src.npcs import NPC, DialogueBox
+from src.juice import Juice
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
 from src.community_hub import CommunityHub
@@ -84,6 +85,7 @@ class Game:
             NPC(WIDTH//2 + 90, HEIGHT//2 + 200, "guard"),
         ]
         self.dialogue = DialogueBox()
+        self.juice = Juice()
         self.season = SeasonSystem()
         self.day_night = DayNightCycle()
         self.storm = StormSystem()
@@ -1098,6 +1100,9 @@ class Game:
                     self._spawn_new_enemy()
                     self.combo_display += 1
                     self.combo_display_timer = 2
+                    _xp = self.juice.add_combo(enemy.x, enemy.y)
+                    self.player.add_xp(max(0, _xp - 25))
+                    self.juice.pulse_edge((255, 215, 80), 0.5)
                 else:
                     self.damage_numbers.append({"x": enemy.x, "y": enemy.y,
                                                "text": str(self.player.attack_power), "timer": 1,
@@ -1261,6 +1266,9 @@ class Game:
                         self._spawn_new_enemy()
                         self.combo_display += 1
                         self.combo_display_timer = 2
+                        _xp = self.juice.add_combo(enemy.x, enemy.y)
+                        self.player.add_xp(max(0, _xp - 25))
+                        self.juice.pulse_edge((255, 215, 80), 0.5)
                     hit = True
                     break
 
@@ -1326,6 +1334,7 @@ class Game:
         self._check_controller_connection()
         self.time += dt
         self.dialogue.update(dt)
+        self.juice.update(dt)
         for npc in self.npcs:
             npc.update(dt)
         keys = pygame.key.get_pressed()
@@ -1707,6 +1716,8 @@ class Game:
                             self.particles.burst(eenemy.x, eenemy.y, GOLD, 15, 4, 30, 5)
                             self.combo_display += 1
                             self.combo_display_timer = 2
+                            _xp = self.juice.add_combo(eenemy.x, eenemy.y)
+                            self.player.add_xp(max(0, _xp - 25))
                         if proj in self.player.projectiles:
                             self.player.projectiles.remove(proj)
                         break
@@ -2155,6 +2166,7 @@ class Game:
             self.hud.controller_connected = self.controller_connected
             self.hud.draw(self.screen, self.particles)
             self.dialogue.draw(self.screen)
+            self.juice.draw(self.screen)
             self._draw_minimap_quest_markers()
             self._draw_mount_hud()
             if self.controller_connected:
