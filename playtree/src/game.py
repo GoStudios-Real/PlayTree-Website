@@ -874,7 +874,7 @@ class Game:
             elif event.key == pygame.K_0:
                 self.player.unequip_weapon()
                 self.show_message("Equipped: Fists", 1)
-            elif event.key == pygame.K_s and not self.crafting_open:
+            elif event.key == pygame.K_g and not self.crafting_open:
                 self.shop_open = not self.shop_open
                 self.inventory_open = False
             elif event.key == pygame.K_F5:

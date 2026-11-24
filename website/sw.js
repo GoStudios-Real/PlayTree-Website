@@ -1,4 +1,4 @@
-const CACHE_NAME = 'playtree-v11';
+const CACHE_NAME = 'playtree-v12';
 const ASSETS = [
   './',
   'index.html',
@@ -58,6 +58,7 @@ self.addEventListener('fetch', e => {
     try { return await fetch(e.request); } catch (_) { return cached || Response.error(); }
   })());
 });
+
 
 
 

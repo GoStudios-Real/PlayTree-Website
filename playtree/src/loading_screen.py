@@ -43,7 +43,7 @@ class LoadingScreen:
         self.tips = [
             "TIP: Press E near villagers to hear their stories.",
             "TIP: Chain kills quickly for combo XP multipliers!",
-            "TIP: Press S in-game to open the DATA STORE.",
+            "TIP: Press G in-game to open the DATA STORE.",
             "TIP: Press F9 to script in GoSD, PLAYTREE's language.",
             "TIP: Gather Tree Energy to tame wild creatures.",
         ]
@@ -188,3 +188,4 @@ class LoadingScreen:
             pygame.draw.rect(s, GREEN, self.play_rect, 2, border_radius=8)
             label = self.font_head.render("▶  PLAY", True, DARK if self.play_hover else GREEN)
             s.blit(label, label.get_rect(center=self.play_rect.center))
+
