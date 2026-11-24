@@ -1,4 +1,4 @@
-const CACHE_NAME = 'playtree-v18';
+const CACHE_NAME = 'playtree-v19';
 const ASSETS = [
   './',
   'index.html',
@@ -11,7 +11,7 @@ const ASSETS = [
   'store.html',
   'servers.html',
   'minigames.html',
-  'tv.html',\n  'web.html',\n  'voice.html',\n  'web/index.html',\n  'web/playtree.tar.gz',
+  'tv.html',\n  'web.html',\n  'voice.html',\n  'cinematics.html',\n  'assets/hd/cutscenes/chapter_intro.gif',\n  'assets/hd/cutscenes/story_corruption.gif',\n  'assets/hd/cutscenes/boss_intro.gif',\n  'assets/hd/cutscenes/victory.gif',\n  'web/index.html',\n  'web/playtree.tar.gz',
   'connect.html',
   'studio.html',
   'trailer.html',
@@ -58,6 +58,7 @@ self.addEventListener('fetch', e => {
     try { return await fetch(e.request); } catch (_) { return cached || Response.error(); }
   })());
 });
+
 
 
 

@@ -44,6 +44,7 @@ from src.game_modes import get_mode, draw_map
 from src.crossover import Storm, BuildSystem, WantedSystem, MiningSystem, PickupSystem
 from src import assets as ART
 from src import hd_assets as HDART
+from src.cutscene_player import CutscenePlayer
 from src.voice_chat import VoiceChat
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
@@ -103,6 +104,7 @@ class Game:
         self.mining = MiningSystem()
         self.pickups = PickupSystem()
         self.crossover_active = False
+        self.cutscene = CutscenePlayer()
         self.season = SeasonSystem()
         self.day_night = DayNightCycle()
         self.storm = StormSystem()
@@ -615,6 +617,11 @@ class Game:
                 self.running = False
                 return
 
+            # Cutscene playback takes priority
+            if self.cutscene.active:
+                self.cutscene.handle_event(event)
+                continue
+
             # GoSD scripting console (F9)
             if self.gosd_console.handle_event(event):
                 continue
@@ -654,6 +661,8 @@ class Game:
                     else:
                         self.show_message(f"{self.mode_data['icon']} {self.mode_data['name']}: {self.mode_data['map_name']}", 4)
                     self.state = GameState.CHARACTER_CREATE
+                    # Chapter intro cutscene
+                    self.cutscene.play('chapter_intro')
                     user_data = self.account.get_user_data()
                     self.name_input = user_data["name"] if user_data else ""
                     self.typing_name = True
@@ -1252,6 +1261,9 @@ class Game:
         self.boss_health_bar.hide()
         self.boss_quest_stage += 1
         self.show_message(f"{boss.name} defeated! +{int(boss.xp_reward * self.new_game_plus.get_xp_mult())} XP", 4)
+        # Victory cutscene on first boss defeat
+        if self.boss_quest_stage == 1:
+            self.cutscene.play('victory')
         self.particles.burst(boss.x, boss.y, GOLD, 30, 6, 50, 8)
         self.leaderboards.update_score("kills", self.player.name, self.round_enemies_killed)
         self.leaderboards.update_score("bosses", self.player.name, self.boss_quest_stage)
@@ -1413,6 +1425,10 @@ class Game:
             self.hit_stop -= dt
             self.camera_shake = max(0, self.camera_shake - dt * 10)
             return  # skip gameplay updates but keep rendering
+        # Cutscene update (freezes gameplay while playing)
+        if self.cutscene.active:
+            self.cutscene.update(dt)
+            return
         self.dt = dt
         self._check_controller_connection()
         self.time += dt
@@ -1904,6 +1920,10 @@ class Game:
         boss = Boss(bx, by, boss_type)
         self.bosses.append(boss)
         self.camera_shake = 5
+        # Boss intro cutscene (first appearance)
+        if not getattr(self, '_boss_intro_played', False):
+            if self.cutscene.play('boss_intro'):
+                self._boss_intro_played = True
 
     def draw(self):
         self.screen.fill((0, 0, 0))
@@ -2008,6 +2028,7 @@ class Game:
         # GoSD scripting console overlays everything
         self.gosd_console.draw(self.screen)
         self.community_hub.draw(self.screen)
+        self.cutscene.draw(self.screen)
 
     def _draw_character_create(self):
         GlowEffect.gradient_rect(self.screen, (5, 5, 30), (20, 30, 50), (0, 0, WIDTH, HEIGHT))
