@@ -46,7 +46,7 @@ class Enemy:
         dy = player_y - self.y
         dist = math.sqrt(dx*dx + dy*dy)
 
-        if dist < self.aggro_range:
+        if dist < self.aggro_range and not getattr(self, 'passive', False):
             if dist < self.attack_range and self.attack_cooldown <= 0:
                 self.state = "attacking"
                 self.attack_cooldown = 1.5

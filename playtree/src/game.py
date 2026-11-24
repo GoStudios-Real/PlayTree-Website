@@ -40,6 +40,7 @@ from src.new_game_plus import NewGamePlus
 from src.pet_system import PetManager
 from src.npcs import NPC, DialogueBox
 from src.juice import Juice
+from src.game_modes import get_mode, draw_map
 from src.voice_chat import VoiceChat
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
@@ -88,6 +89,10 @@ class Game:
         self.dialogue = DialogueBox()
         self.juice = Juice()
         self.voice = VoiceChat()
+        self.game_mode = "story"
+        self.mode_data = get_mode("story")
+        self.pvp_score = 0
+        self.pvp_kills = 0
         self.season = SeasonSystem()
         self.day_night = DayNightCycle()
         self.storm = StormSystem()
@@ -510,18 +515,29 @@ class Game:
         return True
 
     def _spawn_initial_entities(self):
-        for _ in range(8):
+        count = self.mode_data.get("enemies", 8) if hasattr(self, 'mode_data') else 8
+        tier_max = 3 if self.game_mode == "story" else (8 if self.game_mode == "online" else 0)
+        for _ in range(count):
             ex = random.randint(100, WORLD_W - 100)
             ey = random.randint(100, WORLD_H - 100)
-            self.enemies.append(Enemy(ex, ey, random.randint(0, 3)))
-        for _ in range(4):
-            ex = random.randint(100, WORLD_W - 100)
-            ey = random.randint(100, WORLD_H - 100)
-            self.expanded_enemies.append(ExpandedEnemy(ex, ey))
+            self.enemies.append(Enemy(ex, ey, random.randint(0, tier_max)))
+        if self.game_mode != "sandbox":
+            for _ in range(4):
+                ex = random.randint(100, WORLD_W - 100)
+                ey = random.randint(100, WORLD_H - 100)
+                self.expanded_enemies.append(ExpandedEnemy(ex, ey))
         for _ in range(5):
             cx = random.randint(100, WORLD_W - 100)
             cy = random.randint(100, WORLD_H - 100)
             self.creatures.append(Creature(cx, cy, random.randint(0, 4)))
+        # Mode-specific starting resources
+        res = self.player.inventory.setdefault("resources", {})
+        rr = self.mode_data.get("spawn_resource")
+        if rr:
+            res[rr] = res.get(rr, 0) + self.mode_data.get("spawn_amount", 0)
+        if self.mode_data.get("infinite_resources"):
+            for k in ["Tree Energy", "Gold Leaves", "Ancient Seeds", "Crystal Dust", "Light Fragments"]:
+                res[k] = res.get(k, 0) + 999
 
     def show_message(self, text, duration=3):
         self.message = text
@@ -2123,6 +2139,9 @@ class Game:
         light = self.day_night.get_light_level()
 
         self.world.draw(self.screen, int(self.camera_x), int(self.camera_y), self.time)
+        # Mode-specific map features
+        if hasattr(self, 'game_mode'):
+            draw_map(self.screen, int(self.camera_x), int(self.camera_y), self.game_mode, self.time)
 
         # Draw creatures
         for creature in self.creatures:
@@ -2205,6 +2224,13 @@ class Game:
             self.hud.draw(self.screen, self.particles)
             self.dialogue.draw(self.screen)
             self.juice.draw(self.screen)
+            # Mode banner (top-center, below voice indicator)
+            mf = pygame.font.Font(None, 18)
+            mode_txt = f"{self.mode_data['icon']} {self.mode_data['name']} — {self.mode_data['goal']}"
+            if self.game_mode == "online":
+                mode_txt += f"   KOs: {self.pvp_kills}"
+            ms = mf.render(mode_txt, True, self.mode_data['accent'])
+            self.screen.blit(ms, (WIDTH // 2 - ms.get_width() // 2, 76))
             # Voice chat indicator
             vf = pygame.font.Font(None, 16)
             if self.voice.running:
