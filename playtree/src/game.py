@@ -43,6 +43,7 @@ from src.juice import Juice
 from src.game_modes import get_mode, draw_map
 from src.crossover import Storm, BuildSystem, WantedSystem, MiningSystem, PickupSystem
 from src import assets as ART
+from src import hd_assets as HDART
 from src.voice_chat import VoiceChat
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
@@ -1076,6 +1077,9 @@ class Game:
                     text = npc.get_dialogue()
                     if text:
                         self.dialogue.start(npc.name, text)
+                        vmap = {'elder':'elder','blacksmith':'forge','scout':'veyra',
+                                'healer':'mira','guard':'rook'}
+                        HDART.play_voice(vmap.get(npc.npc_type, 'elder'), 0.8)
                         if self.audio:
                             self.audio.play("menu_confirm")
                     return
@@ -2195,17 +2199,32 @@ class Game:
             self.build_sys.draw(self.screen, int(self.camera_x), int(self.camera_y))
             self.pickups.draw(self.screen, int(self.camera_x), int(self.camera_y))
 
-        # Sprite overlays (real PNG art on top of procedural shapes)
-        if self.player:
-            pimg = ART.image(f"player_{self.player.player_class.value.lower()}.png")
+        # HD animated sprite overlays (multi-frame sheets with graceful fallback)
+        if self.player and HDART.sheet(f"{self.player.player_class.value.lower()}_idle.png"):
+            p_cls = self.player.player_class.value.lower()
+            p_anim = 'attack' if getattr(self.player, 'attack_anim', 0) > 0 else ('walk' if getattr(self.player, 'moving', False) else 'idle')
+            p_frame = int(self.time * 8) % 4
+            pimg = HDART.frame(f"{p_cls}_{p_anim}.png", p_frame)
             if pimg:
+                pimg = pygame.transform.smoothscale(pimg, (72, 72))
+                self.screen.blit(pimg, (int(self.player.x - self.camera_x) - 36,
+                                        int(self.player.y - self.camera_y) - 36))
+        else:
+            pimg = ART.image(f"player_{self.player.player_class.value.lower()}.png")
+            if pimg and self.player:
                 px, py = int(self.player.x - self.camera_x) - 32, int(self.player.y - self.camera_y) - 32
                 self.screen.blit(pimg, (px, py))
         for i, enemy in enumerate(self.enemies):
-            eimg = ART.image(f"enemy_{enemy.enemy_type % 6}.png")
+            eimg = HDART.frame(f"enemy_{enemy.enemy_type % 6}_walk.png", int(self.time * 6 + i) % 4)
             if eimg:
-                ex, ey = int(enemy.x - self.camera_x) - 24, int(enemy.y - self.camera_y) - 24
-                self.screen.blit(eimg, (ex, ey))
+                eimg = pygame.transform.smoothscale(eimg, (56, 56))
+                self.screen.blit(eimg, (int(enemy.x - self.camera_x) - 28,
+                                        int(enemy.y - self.camera_y) - 28))
+            else:
+                eimg = ART.image(f"enemy_{enemy.enemy_type % 6}.png")
+                if eimg:
+                    ex, ey = int(enemy.x - self.camera_x) - 24, int(enemy.y - self.camera_y) - 24
+                    self.screen.blit(eimg, (ex, ey))
 
         # Draw creatures
         for creature in self.creatures:
