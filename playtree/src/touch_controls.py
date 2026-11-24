@@ -249,7 +249,7 @@ class TouchControls:
         btn_r = 28
         spacing = 70
 
-        self.joystick = VirtualJoystick(margin + 70, screen_h - margin - 70, radius=55)
+        self.joystick = VirtualJoystick(margin + 90, screen_h - margin - 60, radius=50)
 
         attack_x = screen_w - margin - 50
         attack_y = screen_h - margin - 160
@@ -271,23 +271,24 @@ class TouchControls:
         potion_y = screen_h - margin - 130
         self.potion_btn = TouchButton(potion_x, potion_y, btn_r * 0.7, "POT", (60, 200, 60))
 
-        inv_x = margin + 70
-        inv_y = margin + 70
-        self.inventory_btn = TouchButton(inv_x, inv_y, btn_r * 0.8, "INV", (200, 180, 100))
+        # Menu buttons moved to TOP-CENTER (top-left is occupied by HUD bars/skills/weapon)
+        inv_x = screen_w // 2 - spacing - 20
+        inv_y = margin + 30
+        self.inventory_btn = TouchButton(inv_x, inv_y, btn_r * 0.7, "INV", (200, 180, 100))
 
-        craft_x = margin + 70 + spacing
-        craft_y = margin + 70
-        self.craft_btn = TouchButton(craft_x, craft_y, btn_r * 0.8, "CRF", (180, 140, 80))
+        craft_x = screen_w // 2 + spacing + 20
+        craft_y = margin + 30
+        self.craft_btn = TouchButton(craft_x, craft_y, btn_r * 0.7, "CRF", (180, 140, 80))
 
-        mount_x = margin + 70
-        mount_y = margin + 70 + spacing
-        self.mount_btn = TouchButton(mount_x, mount_y, btn_r * 0.7, "MNT", (150, 200, 255))
+        mount_x = screen_w // 2 - 20
+        mount_y = margin + 30
+        self.mount_btn = TouchButton(mount_x, mount_y, btn_r * 0.6, "MNT", (150, 200, 255))
 
         self.all_buttons = [self.attack_btn, self.dodge_btn, self.special_btn,
                            self.interact_btn, self.potion_btn, self.inventory_btn,
                            self.craft_btn, self.mount_btn]
 
-        self.menu_btn = TouchButton(screen_w // 2, margin + 30, btn_r * 0.7, "|||", (200, 200, 200))
+        self.menu_btn = TouchButton(screen_w - margin - 50, margin + 230, btn_r * 0.6, "|||", (200, 200, 200))
 
         self.enabled = detect_touchscreen() if enabled is None else enabled
 

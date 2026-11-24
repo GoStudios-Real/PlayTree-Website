@@ -134,9 +134,9 @@ class HUD:
 
     def _draw_quest_tracker(self, screen):
         qx = 20
-        qy = HEIGHT - 180
-        pygame.draw.rect(screen, (15, 15, 30, 200), (qx, qy, 280, 180), border_radius=6)
-        pygame.draw.rect(screen, (60, 180, 80, 60), (qx, qy, 280, 180), border_radius=6, width=1)
+        qy = HEIGHT - 300
+        pygame.draw.rect(screen, (15, 15, 30, 200), (qx, qy, 280, 140), border_radius=6)
+        pygame.draw.rect(screen, (60, 180, 80, 60), (qx, qy, 280, 140), border_radius=6, width=1)
         title = self.title_font.render("QUESTS", True, (100, 200, 120))
         screen.blit(title, (qx + 10, qy + 5))
         if hasattr(self.player, 'quests') and self.player.quests:

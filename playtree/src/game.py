@@ -1951,7 +1951,7 @@ class Game:
                 nr_f = pygame.font.Font(None, 20)
                 pulse = int(math.sin(self.time * 3) * 30 + 225)
                 nr_s = nr_f.render("Daily Reward Available! (F10)", True, (*GOLD[:3], pulse))
-                self.screen.blit(nr_s, (WIDTH // 2 - nr_s.get_width() // 2, 50))
+                self.screen.blit(nr_s, (WIDTH // 2 - nr_s.get_width() // 2, 180))
             if self.daily_rewards_open:
                 self.daily_rewards.draw(self.screen)
             if self.leaderboards_open:
@@ -2334,7 +2334,7 @@ class Game:
             if self.game_mode == "online":
                 mode_txt += f"   KOs: {self.pvp_kills}"
             ms = mf.render(mode_txt, True, self.mode_data['accent'])
-            self.screen.blit(ms, (WIDTH // 2 - ms.get_width() // 2, 76))
+            self.screen.blit(ms, (WIDTH // 2 - ms.get_width() // 2, 110))
             if self.crossover_active:
                 self.storm_sys.draw(self.screen, int(self.camera_x), int(self.camera_y))
                 self.wanted.draw(self.screen)
@@ -2347,11 +2347,11 @@ class Game:
                 vtxt = "🎤 VOICE ON — hold V to talk" if not self.voice.ptt else "🎤 SPEAKING..."
                 vcol = (255, 100, 100) if self.voice.ptt else (150, 200, 160)
                 vs = vf.render(vtxt, True, vcol)
-                self.screen.blit(vs, (WIDTH // 2 - vs.get_width() // 2, 100))
+                self.screen.blit(vs, (WIDTH // 2 - vs.get_width() // 2, 135))
                 spk = self.voice.speaking_now()
                 if spk:
                     ss = vf.render(f"🔊 Player {spk[0]} speaking", True, GOLD)
-                    self.screen.blit(ss, (WIDTH // 2 - ss.get_width() // 2, 120))
+                    self.screen.blit(ss, (WIDTH // 2 - ss.get_width() // 2, 155))
             self._draw_minimap_quest_markers()
             self._draw_mount_hud()
             if self.controller_connected:
