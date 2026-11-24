@@ -38,6 +38,7 @@ from src.update_log import UpdateLog
 from src.screenshot import ScreenshotSystem
 from src.new_game_plus import NewGamePlus
 from src.pet_system import PetManager
+from src.npcs import NPC, DialogueBox
 from src.currency import CurrencySystem
 from src.gosd_console import GoSDConsole
 from src.community_hub import CommunityHub
@@ -74,6 +75,15 @@ class Game:
             self.state = GameState.LOGIN if not self.account.current_user else GameState.MAIN_MENU
         self.main_menu = MainMenu(screen, has_save=has_save())
         self.main_menu.audio = self.audio
+        # World NPCs + dialogue system
+        self.npcs = [
+            NPC(WIDTH//2, HEIGHT//2 + 120, "elder"),
+            NPC(WIDTH//2 - 140, HEIGHT//2 + 100, "blacksmith"),
+            NPC(WIDTH//2 + 150, HEIGHT//2 + 110, "scout"),
+            NPC(WIDTH//2 - 80, HEIGHT//2 + 180, "healer"),
+            NPC(WIDTH//2 + 90, HEIGHT//2 + 200, "guard"),
+        ]
+        self.dialogue = DialogueBox()
         self.season = SeasonSystem()
         self.day_night = DayNightCycle()
         self.storm = StormSystem()
@@ -924,6 +934,9 @@ class Game:
                 self.mount.sprint(False)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.dialogue.active:
+                self.dialogue.advance()
+                return
             if self.build_open:
                 self.base_builder.handle_click(event.pos[0], event.pos[1],
                                               int(self.camera_x), int(self.camera_y), self.player)
@@ -973,6 +986,20 @@ class Game:
                 self.locker_open = not self.locker_open
 
     def _try_interact(self):
+        # Dialogue first (advance/close active conversation)
+        if self.dialogue.active:
+            self.dialogue.advance()
+            return
+        # Talk to nearby NPCs
+        if self.player:
+            for npc in self.npcs:
+                if npc.is_in_range(self.player.x, self.player.y):
+                    text = npc.get_dialogue()
+                    if text:
+                        self.dialogue.start(npc.name, text)
+                        if self.audio:
+                            self.audio.play("menu_confirm")
+                    return
         # Check bosses
         for boss in self.bosses:
             dx = boss.x - self.player.x
@@ -1298,6 +1325,9 @@ class Game:
         self.dt = dt
         self._check_controller_connection()
         self.time += dt
+        self.dialogue.update(dt)
+        for npc in self.npcs:
+            npc.update(dt)
         keys = pygame.key.get_pressed()
         mouse_buttons = pygame.mouse.get_pressed()
         mouse_pos = pygame.mouse.get_pos()
@@ -2057,6 +2087,13 @@ class Game:
         for eenemy in self.expanded_enemies:
             eenemy.draw(self.screen, int(self.camera_x), int(self.camera_y))
 
+        # Draw NPCs + interaction prompts
+        for npc in self.npcs:
+            npc.draw(self.screen, int(self.camera_x), int(self.camera_y), self.time)
+            if self.state == GameState.PLAYING and not self.dialogue.active:
+                npc.draw_interaction(self.screen, self.player.x, self.player.y,
+                                     int(self.camera_x), int(self.camera_y))
+
         # Draw base buildings
         self.base_builder.draw(self.screen, int(self.camera_x), int(self.camera_y))
 
@@ -2117,6 +2154,7 @@ class Game:
         if self.state == GameState.PLAYING:
             self.hud.controller_connected = self.controller_connected
             self.hud.draw(self.screen, self.particles)
+            self.dialogue.draw(self.screen)
             self._draw_minimap_quest_markers()
             self._draw_mount_hud()
             if self.controller_connected:

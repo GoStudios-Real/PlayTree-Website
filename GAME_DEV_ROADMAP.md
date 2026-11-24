@@ -20,9 +20,9 @@ Goal: make 3 minutes of combat genuinely fun.
 - [x] Knockback on hit
 - [x] Screen shake on impacts
 - [x] Damage numbers + combo counter
-- [ ] Hit-stop (freeze frame 50ms on kill)
+- [x] Hit-stop (freeze frame 60ms on kill)
 - [ ] Better sound design on hits
-- [ ] Enemy telegraph animations before attacks
+- [x] Enemy telegraph animations before attacks
 
 ### Progression
 - [ ] Meaningful rewards per round
@@ -46,7 +46,7 @@ The tree isn't just decor — make it a core mechanic:
 ## Phase 3 — Content
 - [ ] 10+ enemy types with unique behaviors
 - [ ] 4 bosses with distinct mechanics
-- [ ] Story/dialogue system
+- [x] Story/dialogue system (5 NPCs with dialogue)
 - [ ] More areas/biomes
 - [ ] More weapons/skills
 
@@ -94,4 +94,5 @@ The tree isn't just decor — make it a core mechanic:
 - 100 Discord members
 - 100 X devlog posts
 - 1,000 wishlists on Steam
+
 
